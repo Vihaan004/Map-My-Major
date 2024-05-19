@@ -6,7 +6,7 @@ function createSemester(index) {
         <div class="sem-header" onclick="toggleDropdown(${index})">
             <h4 class="sem-name" id="sem-name-${index}"> ${index + 1} - Sem ${index + 1}</h4>
         </div>
-        <div class="add-class" onclick="addClass(${index})">Add Class</div>
+        <div class="add-class" onclick="addClass(${index})">+</div>
     `;
     return semesterDiv;
 }
