@@ -1,3 +1,5 @@
+let currentSemesterIndex = null;
+
 function createSemester(index) {
     const semesterDiv = document.createElement('div');
     semesterDiv.className = 'semester';
@@ -6,7 +8,7 @@ function createSemester(index) {
         <div class="sem-header" onclick="toggleDropdown(${index})">
             <h4 class="sem-name" id="sem-name-${index}"> ${index + 1} - Sem ${index + 1}</h4>
         </div>
-        <div class="add-class" onclick="addClass(${index})">+</div>
+        <div class="add-class" onclick="openPopup(${index})">+</div>
     `;
     return semesterDiv;
 }
@@ -18,18 +20,40 @@ function addSemester() {
     map.appendChild(newSemester);
 }
 
-function addClass(semesterIndex) {
-    const semesterDiv = document.getElementById(`semester-${semesterIndex}`);
-    const classDiv = document.createElement('div');
-    classDiv.className = 'class';
-    classDiv.innerHTML = `Class ${semesterDiv.getElementsByClassName('class').length + 1}`;
-    semesterDiv.insertBefore(classDiv, semesterDiv.querySelector('.add-class'));
+function openPopup(semesterIndex) {
+    currentSemesterIndex = semesterIndex;
+    document.getElementById('classPopup').style.display = 'block';
 }
 
-// function toggleDropdown(index) {
-//     const dropdown = document.getElementById(`dropdown-${index}`);
-//     dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-// }
+function closePopup() {
+    document.getElementById('classPopup').style.display = 'none';
+}
+
+function submitClass() {
+    const className = document.getElementById('className').value;
+    const classRequirements = document.getElementById('classRequirements').value;
+    const classCredits = document.getElementById('classCredits').value;
+
+    if (className && classRequirements && classCredits) {
+        const semesterDiv = document.getElementById(`semester-${currentSemesterIndex}`);
+        const classDiv = document.createElement('div');
+        classDiv.className = 'class';
+        classDiv.innerHTML = `
+            <div class="class-name">${className}</div>
+            <div class="class-requirements">${classRequirements}</div>
+            <div class="class-credits">${classCredits}</div>
+        `;
+        semesterDiv.insertBefore(classDiv, semesterDiv.querySelector('.add-class'));
+        closePopup();
+    } else {
+        alert('Please fill in all fields');
+    }
+}
+
+function toggleDropdown(index) {
+    const dropdown = document.getElementById(`dropdown-${index}`);
+    dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+}
 
 function renameSemester(index) {
     const semName = document.getElementById(`sem-name-${index}`);
@@ -54,7 +78,7 @@ function deleteSemester(index) {
         remainingSemesters[i].querySelector('.dropdown').id = `dropdown-${i}`;
         remainingSemesters[i].querySelectorAll('.dropdown-content')[1].setAttribute('onclick', `deleteSemester(${i})`);
         remainingSemesters[i].querySelectorAll('.dropdown-content')[0].setAttribute('onclick', `renameSemester(${i})`);
-        remainingSemesters[i].querySelector('.add-class').setAttribute('onclick', `addClass(${i})`);
+        remainingSemesters[i].querySelector('.add-class').setAttribute('onclick', `openPopup(${i})`);
     }
 }
 
@@ -63,12 +87,12 @@ for (let i = 0; i < 8; i++) {
     addSemester();
 }
 
-// // Hide dropdowns when clicking outside
-// document.addEventListener('click', function(event) {
-//     const dropdowns = document.getElementsByClassName('dropdown');
-//     for (let i = 0; i < dropdowns.length; i++) {
-//         if (!dropdowns[i].parentElement.contains(event.target)) {
-//             dropdowns[i].style.display = 'none';
-//         }
-//     }
-// });
+// Hide dropdowns when clicking outside
+document.addEventListener('click', function(event) {
+    const dropdowns = document.getElementsByClassName('dropdown');
+    for (let i = 0; i < dropdowns.length; i++) {
+        if (!dropdowns[i].parentElement.contains(event.target)) {
+            dropdowns[i].style.display = 'none';
+        }
+    }
+});
