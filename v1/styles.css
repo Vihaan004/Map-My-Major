@@ -36,7 +36,7 @@ body {
     height: 300px; /* Adjust as necessary */
 }
 
-.header {
+.sem-header {
     width: 100%;
     background-color: #ced4da;
     padding: 10px;
@@ -46,12 +46,12 @@ body {
     justify-content: space-between;
 }
 
-.header div {
+.sem-header div {
     display: flex;
     align-items: center;
 }
 
-.header h4, .header span {
+.sem-header h4 {
     margin: 0;
     font-size: 14px;
     font-weight: bold;

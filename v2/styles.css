@@ -1,0 +1,53 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.map {
+    display: flex;
+    border: 1px solid black;
+    margin: 10px;
+    padding: 10px;
+    background-color: white;
+    overflow-x: auto;
+}
+
+.semester {
+    border: 1px solid black;
+    margin: 5px;
+    width: 150px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    position: relative;
+    height: 600px; /* Adjust as necessary */
+}
+
+
+.sem-header {
+    background-color: white;
+    margin-bottom: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    width: 150px;
+    height: 25px;
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    justify-content: center; /* Centers content horizontally */
+    align-items: center;    /* Centers content vertically */
+}
+

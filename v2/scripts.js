@@ -4,14 +4,7 @@ function createSemester(index) {
     semesterDiv.id = `semester-${index}`;
     semesterDiv.innerHTML = `
         <div class="sem-header" onclick="toggleDropdown(${index})">
-            <div>
-                <h4 class="sem-number">${index + 1}</span>
-                <h4 class="sem-name" id="sem-name-${index}">Sem ${index + 1}</h4>
-            </div>
-            <div class="dropdown" id="dropdown-${index}">
-                <div class="dropdown-content" onclick="renameSemester(${index})">Rename Semester</div>
-                <div class="dropdown-content" onclick="deleteSemester(${index})">Delete Semester</div>
-            </div>
+            <h4 class="sem-name" id="sem-name-${index}"> ${index + 1} - Sem ${index + 1}</h4>
         </div>
         <div class="add-class" onclick="addClass(${index})">Add Class</div>
     `;
@@ -70,7 +63,7 @@ for (let i = 0; i < 8; i++) {
     addSemester();
 }
 
-// Hide dropdowns when clicking outside
+// // Hide dropdowns when clicking outside
 // document.addEventListener('click', function(event) {
 //     const dropdowns = document.getElementsByClassName('dropdown');
 //     for (let i = 0; i < dropdowns.length; i++) {
