@@ -10,45 +10,56 @@ body {
   font-family: "Ubuntu", sans-serif;
   font-weight: 400;
   font-style: normal;
+  font-size: 0.9rem; /* Adjusted font size to 90% */
 }
-
 
 .navbar {
   width: 100%;
-  /* background-color: rgb(15, 103, 15); */
   background-color: darkgreen;
   color: white;
   height: fit-content;
   text-align: center;
-  margin-bottom: 10px;
   position: fixed;
   top: 0;
   left: 0;
-  /* z-index: 1000; */
+  z-index: 1000;
+}
+
+.sidebar {
+  width: 225px; /* Adjusted width to 90% */
+  height: 100%;
+  background-color: darkgreen;
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow-x: hidden;
+  padding-top: 63px; /* Adjusted for the navbar height (90%) */
+  z-index: 1000;
 }
 
 .title {
-  font-size: 1.5rem;
+  font-size: 1.35rem; /* Adjusted font size to 90% */
 }
 
 .container {
   display: flex;
-  justify-content: center;
-  width: 100%;
-  min-width: 1200px; /* This should match or exceed the min-width of .map */
+  justify-content: flex-start;
+  width: calc(100% - 225px); /* Adjust for the sidebar width */
+  margin-left: 225px; /* Align the container after the sidebar */
+  margin-top: 63px; /* Adjust this value if your navbar height changes */
   overflow-x: auto; /* Enables horizontal scrolling within the container */
-  margin-top: 70px; /* Adjust this value if your navbar height changes */
 }
 
 .map {
   display: flex;
-  min-width: 1200px; /* Ensure this matches the total width of all child elements */
+  min-width: 1080px; /* Ensure this matches the total width of all child elements */
 }
 
 .new-semester {
   background-color: #f0f0f0;
-  width: 120px;
-  margin: 0 20px;
+  width: 108px; /* Adjusted width to 90% */
+  margin: 0 18px; /* Adjusted margin to 90% */
   border: 1px solid #ddd;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   flex-shrink: 0; /* Prevents the semester divs from shrinking */
@@ -59,14 +70,14 @@ body {
 }
 
 #plus {
-  font-size: 2rem;
+  font-size: 1.8rem; /* Adjusted font size to 90% */
   color: #333;  
 }
 
 .semester {
   background-color: #f0f0f0;
-  width: 120px;
-  margin: 0 20px;
+  width: 108px; /* Adjusted width to 90% */
+  margin: 0 18px; /* Adjusted margin to 90% */
   border: 1px solid #ddd;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   flex-shrink: 0; /* Prevents the semester divs from shrinking */
@@ -77,63 +88,77 @@ body {
 }
 
 .semester-head {
-  height: 60px;
+  height: 54px; /* Adjusted height to 90% */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100%;
-  /* padding: 0 10px; */
   text-align: center;
+  color: rgb(96, 96, 96);
 }
 
 .sem-label-container {
-  font-size: 0.65rem;
+  font-size: 0.585rem; /* Adjusted font size to 90% */
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px; /* Gap between semester label and delete button */
+  gap: 9px; /* Gap between semester label and delete button */
   width: 100%;
-  /* margin-bottom: 0px; */
 }
 
 .sem-name {
   margin-top: 0px;
-  font-size: 0.75rem;
-  /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
+  font-size: 0.675rem; /* Adjusted font size to 90% */
 }
 
 .delete-semester {
   cursor: pointer;
-  width: 14px; /* Adjust the size as needed */
-  height: 14px; /* Adjust the size as needed */
+  width: 12.6px; /* Adjusted size to 90% */
+  height: 12.6px; /* Adjusted size to 90% */
   opacity: 30%;
   display: inline-block;
   vertical-align: middle;
 }
 
 .classbox {
-  min-height: 30px;
-  width: 60%;
-  background-color: #ffffff;
+  min-height: 27px; /* Adjusted height to 90% */
+  width: 54%; /* Adjusted width to 90% */
+  background-color: orange;
   border: 1px solid black;
-  margin: 15px;
+  margin: 13.5px; /* Adjusted margin to 90% */
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px;
+  padding: 9px; /* Adjusted padding to 90% */
 }
 
 .add-class-button {
-  font-size: 1rem;
+  font-size: 0.9rem; /* Adjusted font size to 90% */
   cursor: pointer;
   color: #333;
-  min-height: 30px;
-  width: 60%;
-  border: 1px solid grey;
-  margin: 15px;
+  min-height: 27px; /* Adjusted height to 90% */
+  width: 54%; /* Adjusted width to 90% */
+  border: 1px dashed grey;
+  margin: 13.5px; /* Adjusted margin to 90% */
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px;
+  padding: 9px; /* Adjusted padding to 90% */
+}
+
+.semester-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding-top: 10px; /* Optional: space between add class button and footer */
+}
+
+.footer-box {
+  min-height: 20px; /* Half of class box height (27px) */
+  width: 70%; /* Same as class box width */
+  background-color: rgb(224, 224, 224);
+  border: 1px solid rgba(96, 96, 96, 0.388);
+  margin-bottom: 10px;
 }
