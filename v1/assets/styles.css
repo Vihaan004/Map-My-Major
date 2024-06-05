@@ -7,12 +7,16 @@ html, body {
 }
 
 body {
-  font-family: Arial, sans-serif;
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }
+
 
 .navbar {
   width: 100%;
-  background-color: forestgreen;
+  /* background-color: rgb(15, 103, 15); */
+  background-color: darkgreen;
   color: white;
   height: fit-content;
   text-align: center;
@@ -69,17 +73,43 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: auto; /* Add this line */
+  height: auto;
 }
 
 .semester-head {
   height: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  /* padding: 0 10px; */
+  text-align: center;
 }
 
-.sem-label {
+.sem-label-container {
+  font-size: 0.65rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px; /* Gap between semester label and delete button */
+  width: 100%;
+  /* margin-bottom: 0px; */
+}
+
+.sem-name {
+  margin-top: 0px;
   font-size: 0.75rem;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  text-align: center;
+  /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
+}
+
+.delete-semester {
+  cursor: pointer;
+  width: 14px; /* Adjust the size as needed */
+  height: 14px; /* Adjust the size as needed */
+  opacity: 30%;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .classbox {
