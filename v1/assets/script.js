@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentSemesters = document.querySelectorAll('.semester').length;
         if (currentSemesters < 12) {
             addSemester(currentSemesters + 1);
-            // adjustHeight();
         } else {
             alert('Maximum of 12 semesters reached.');
         }
@@ -35,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const deleteSemesterButton = document.createElement('img');
         deleteSemesterButton.classList.add('delete-semester');
-        deleteSemesterButton.src = 'assets/images/delete.png'
+        deleteSemesterButton.src = 'assets/images/delete.png';
         deleteSemesterButton.alt = 'delete';
         deleteSemesterButton.addEventListener('click', () => {
             removeSemester(semester);
@@ -61,6 +60,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         semester.appendChild(addClassButton);
+
+        const semesterFooter = document.createElement('div');
+        semesterFooter.classList.add('semester-footer');
+
+        const footerBox = document.createElement('div');
+        footerBox.classList.add('footer-box');
+        semesterFooter.appendChild(footerBox);
+
+        semester.appendChild(semesterFooter);
 
         map.insertBefore(semester, addSemesterButton);
     }
