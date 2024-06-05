@@ -23,9 +23,10 @@ body {
   /* z-index: 1000; */
 }
 
-.title{
+.title {
   font-size: 1.5rem;
 }
+
 .container {
   display: flex;
   justify-content: center;
@@ -37,9 +38,6 @@ body {
 
 .map {
   display: flex;
-  /* background-color: #f0f0f0; */
-  /* border-top: 2px solid black; */
-  /* border-bottom: 2px solid black; */
   min-width: 1200px; /* Ensure this matches the total width of all child elements */
 }
 
@@ -50,13 +48,15 @@ body {
   border: 1px solid #ddd;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   flex-shrink: 0; /* Prevents the semester divs from shrinking */
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 }
 
 #plus {
   font-size: 2rem;
-  color: #333;
-  margin: auto;
+  color: #333;  
 }
 
 .semester {
@@ -66,6 +66,10 @@ body {
   border: 1px solid #ddd;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   flex-shrink: 0; /* Prevents the semester divs from shrinking */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: auto; /* Add this line */
 }
 
 .semester-head {
@@ -74,15 +78,29 @@ body {
 
 .sem-label {
   font-size: 0.75rem;
-  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   text-align: center;
-  /* margin-bottom: 10px; */
 }
 
 .classbox {
-  height: 30px;
+  min-height: 30px;
+  width: 60%;
   background-color: #ffffff;
   border: 1px solid black;
+  margin: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.add-class-button {
+  font-size: 1rem;
+  cursor: pointer;
+  color: #333;
+  min-height: 30px;
+  width: 60%;
+  border: 1px solid grey;
   margin: 15px;
   display: flex;
   align-items: center;
