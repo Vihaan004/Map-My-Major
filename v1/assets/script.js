@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentSemesters = document.querySelectorAll('.semester').length;
         if (currentSemesters < 12) {
             addSemester(currentSemesters + 1);
+            adjustHeight();
         } else {
             alert('Maximum of 12 semesters reached.');
         }
@@ -37,12 +38,49 @@ document.addEventListener('DOMContentLoaded', () => {
         semesterHead.appendChild(seasonLabel);
         semester.appendChild(semesterHead);
 
-        for (let j = 0; j < 6; j++) {
-            const classbox = document.createElement('div');
-            classbox.classList.add('classbox');
-            semester.appendChild(classbox);
-        }
+        // for (let j = 0; j < 6; j++) {
+        //     const classbox = document.createElement('div');
+        //     classbox.classList.add('classbox');
+        //     semester.appendChild(classbox);
+        // }
+
+        const addClassButton = document.createElement('div');
+        addClassButton.classList.add('add-class-button');
+        addClassButton.textContent = '+';
+        addClassButton.addEventListener('click', () => {
+            addClassBox(semester);
+            adjustHeight();
+        });
+
+        semester.appendChild(addClassButton);
 
         map.insertBefore(semester, addSemesterButton);
     }
+
+    function addClassBox(semester) {
+        const classbox = document.createElement('div');
+        classbox.classList.add('classbox');
+        semester.insertBefore(classbox, semester.querySelector('.add-class-button'));
+    }
+
+    // function adjustHeight() {
+    //     const semesters = document.querySelectorAll('.semester');
+    //     let maxHeight = 0;
+
+    //     semesters.forEach(semester => {
+    //         const height = semester.offsetHeight;
+    //         if (height > maxHeight) {
+    //             maxHeight = height;
+    //         }
+    //     });
+
+    //     semesters.forEach(semester => {
+    //         semester.style.height = `${maxHeight}px`;
+    //     });
+
+    //     const newSemester = document.getElementById('new-semester');
+    //     newSemester.style.height = `${maxHeight}px`;
+    // }
+
+    // adjustHeight();
 });
