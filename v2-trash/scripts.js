@@ -1,12 +1,19 @@
 let currentSemesterIndex = null;
+let currentSemester = null;
 
 function createSemester(index) {
     const semesterDiv = document.createElement('div');
     semesterDiv.className = 'semester';
     semesterDiv.id = `semester-${index}`;
     semesterDiv.innerHTML = `
-        <div class="sem-header" onclick="toggleDropdown(${index})">
-            <h4 class="sem-name" id="sem-name-${index}"> ${index + 1} - Sem ${index + 1}</h4>
+        <div class="sem-header">
+            <h4 class="sem-name" id="sem-name-${index}" onclick="toggleDropdown(${index})">${index + 1} - Sem ${index + 1}</h4>
+            <div class="dropdown-btn" onclick="toggleDropdown(${index})">&#x25BC;</div>
+            <div class="dropdown" id="dropdown-${index}">
+                <div class="dropdown-content" onclick="setCurrentSemester(${index})">Set as Current Semester</div>
+                <div class="dropdown-content" onclick="renameSemester(${index})">Rename Semester</div>
+                <div class="dropdown-content" onclick="deleteSemester(${index})">Delete Semester</div>
+            </div>
         </div>
         <div class="add-class" onclick="openPopup(${index})">+</div>
     `;
@@ -44,6 +51,7 @@ function submitClass() {
             <div class="class-credits">${classCredits}</div>
         `;
         semesterDiv.insertBefore(classDiv, semesterDiv.querySelector('.add-class'));
+        updateClassColors();
         closePopup();
     } else {
         alert('Please fill in all fields');
@@ -73,12 +81,41 @@ function deleteSemester(index) {
     const remainingSemesters = map.getElementsByClassName('semester');
     for (let i = 0; i < remainingSemesters.length; i++) {
         remainingSemesters[i].id = `semester-${i}`;
-        remainingSemesters[i].querySelector('.sem-number').innerText = `${i + 1}`;
-        remainingSemesters[i].querySelector('.header').setAttribute('onclick', `toggleDropdown(${i})`);
+        remainingSemesters[i].querySelector('.sem-name').innerText = `${i + 1} - ${remainingSemesters[i].querySelector('.sem-name').innerText.split(' - ')[1]}`;
+        remainingSemesters[i].querySelector('.dropdown-btn').setAttribute('onclick', `toggleDropdown(${i})`);
         remainingSemesters[i].querySelector('.dropdown').id = `dropdown-${i}`;
-        remainingSemesters[i].querySelectorAll('.dropdown-content')[1].setAttribute('onclick', `deleteSemester(${i})`);
-        remainingSemesters[i].querySelectorAll('.dropdown-content')[0].setAttribute('onclick', `renameSemester(${i})`);
+        remainingSemesters[i].querySelectorAll('.dropdown-content')[2].setAttribute('onclick', `deleteSemester(${i})`);
+        remainingSemesters[i].querySelectorAll('.dropdown-content')[1].setAttribute('onclick', `renameSemester(${i})`);
+        remainingSemesters[i].querySelectorAll('.dropdown-content')[0].setAttribute('onclick', `setCurrentSemester(${i})`);
         remainingSemesters[i].querySelector('.add-class').setAttribute('onclick', `openPopup(${i})`);
+    }
+    updateClassColors();
+}
+
+function setCurrentSemester(index) {
+    if (currentSemester !== null) {
+        document.getElementById(`semester-${currentSemester}`).style.border = '1px solid black';
+    }
+    currentSemester = index;
+    document.getElementById(`semester-${index}`).style.border = '3px solid black';
+    updateClassColors();
+    toggleDropdown(index);
+}
+
+function updateClassColors() {
+    const map = document.getElementById('map');
+    const semesters = map.getElementsByClassName('semester');
+    for (let i = 0; i < semesters.length; i++) {
+        const classes = semesters[i].getElementsByClassName('class');
+        for (let j = 0; j < classes.length; j++) {
+            if (i < currentSemester) {
+                classes[j].style.backgroundColor = 'green';
+            } else if (i === currentSemester) {
+                classes[j].style.backgroundColor = 'lightblue';
+            } else {
+                classes[j].style.backgroundColor = 'orange';
+            }
+        }
     }
 }
 
