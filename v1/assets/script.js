@@ -1,6 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     const map = document.querySelector('.map');
     const addSemesterButton = document.getElementById('new-semester');
+    const modal = document.getElementById('classModal');
+    const span = document.getElementsByClassName('close')[0];
+    const classForm = document.getElementById('classForm');
+
+    let currentSemester = null;
 
     // Initial semesters
     let initialSemesters = 8;
@@ -55,8 +60,8 @@ document.addEventListener('DOMContentLoaded', () => {
         addClassButton.classList.add('add-class-button');
         addClassButton.textContent = '+';
         addClassButton.addEventListener('click', () => {
-            addClassBox(semester);
-            adjustHeight();
+            currentSemester = semester;
+            modal.style.display = 'block';
         });
 
         semester.appendChild(addClassButton);
@@ -66,6 +71,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const footerBox = document.createElement('div');
         footerBox.classList.add('footer-box');
+
+
+
+        // const semTotal = document.createElement('div');
+        // semTotal.classList.add('sem-total');
+
+        // Add the credit hours sum display
+        const creditHoursSum = document.createElement('div');
+        creditHoursSum.classList.add('credit-hours-sum');
+        creditHoursSum.textContent = '0';
+        
+        footerBox.appendChild(creditHoursSum);
+
+        // required
         semesterFooter.appendChild(footerBox);
 
         semester.appendChild(semesterFooter);
@@ -73,9 +92,54 @@ document.addEventListener('DOMContentLoaded', () => {
         map.insertBefore(semester, addSemesterButton);
     }
 
-    function addClassBox(semester) {
+    classForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const className = document.getElementById('className').value;
+        const requirements = document.getElementById('requirements').value;
+        const creditHours = document.getElementById('creditHours').value;
+
+        if (currentSemester && className && creditHours <= 99) {
+            addClassBox(currentSemester, { className, requirements, creditHours });
+            modal.style.display = 'none';
+            classForm.reset();
+            currentSemester = null;
+        }
+    });
+
+    span.onclick = function() {
+        modal.style.display = 'none';
+        classForm.reset();
+        currentSemester = null;
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+            classForm.reset();
+            currentSemester = null;
+        }
+    }
+
+    function addClassBox(semester, classDetails) {
         const classbox = document.createElement('div');
         classbox.classList.add('classbox');
+
+        const classNameRow = document.createElement('div');
+        classNameRow.classList.add('classbox-row', 'left-align');
+        classNameRow.textContent = classDetails.className;
+
+        const requirementsRow = document.createElement('div');
+        requirementsRow.classList.add('classbox-row', 'left-align');
+        requirementsRow.textContent = classDetails.requirements || ' ';
+
+        const creditHoursRow = document.createElement('div');
+        creditHoursRow.classList.add('classbox-row', 'right-align');
+        creditHoursRow.textContent = classDetails.creditHours;
+
+        classbox.appendChild(classNameRow);
+        classbox.appendChild(requirementsRow);
+        classbox.appendChild(creditHoursRow);
+
         semester.insertBefore(classbox, semester.querySelector('.add-class-button'));
     }
 
@@ -93,25 +157,4 @@ document.addEventListener('DOMContentLoaded', () => {
             seasonLabel.textContent = (index + 1) % 2 === 0 ? `Spring ${24 + Math.floor((index + 1) / 2)}` : `Fall ${24 + Math.floor((index + 1) / 2)}`;
         });
     }
-
-    // function adjustHeight() {
-    //     const semesters = document.querySelectorAll('.semester');
-    //     let maxHeight = 0;
-
-    //     semesters.forEach(semester => {
-    //         const height = semester.offsetHeight;
-    //         if (height > maxHeight) {
-    //             maxHeight = height;
-    //         }
-    //     });
-
-    //     semesters.forEach(semester => {
-    //         semester.style.height = `${maxHeight}px`;
-    //     });
-
-    //     const newSemester = document.getElementById('new-semester');
-    //     newSemester.style.height = `${maxHeight}px`;
-    // }
-
-    // adjustHeight();
 });
