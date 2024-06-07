@@ -13,16 +13,25 @@ body {
   font-size: 0.9rem; /* Adjusted font size to 90% */
 }
 
-.navbar {
-  width: 100%;
-  background-color: darkgreen;
-  color: white;
-  height: fit-content;
-  text-align: center;
+.controls {
+  display: flex;
+  justify-content: flex-start;
+  width: calc(98% - 225px); /* Adjust for the sidebar width */
+  margin-left: 242px; /* Align the container after the sidebar */
+  margin-top: 10px;
+  margin-right: 20px;
+  /* width: 100%; */
+  height: 35px;
+  border-radius: 5px;
+  background-color: rgb(224, 224, 224);
+  border: 1px solid rgba(96, 96, 96, 0.388);
   position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1000;
+  z-index: 1001;
+}
+
+.title {
+  font-size: 1.35rem; /* Adjusted font size to 90% */
+  text-align: center;
 }
 
 .sidebar {
@@ -34,12 +43,7 @@ body {
   top: 0;
   left: 0;
   overflow-x: hidden;
-  padding-top: 63px; /* Adjusted for the navbar height (90%) */
   z-index: 1000;
-}
-
-.title {
-  font-size: 1.35rem; /* Adjusted font size to 90% */
 }
 
 .container {
@@ -85,6 +89,7 @@ body {
   flex-direction: column;
   align-items: center;
   height: auto;
+  z-index: 10;
 }
 
 .semester-head {
@@ -122,29 +127,49 @@ body {
 }
 
 .classbox {
-  min-height: 27px; /* Adjusted height to 90% */
-  width: 54%; /* Adjusted width to 90% */
+  height: 50px; /* Fixed height */
+  width: 80px; /* Fixed width */
   background-color: orange;
   border: 1px solid black;
   margin: 13.5px; /* Adjusted margin to 90% */
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: center;
-  padding: 9px; /* Adjusted padding to 90% */
+  padding-right: 5px;
+  padding-left: 5px; 
+  padding-top: 2px;
+  box-sizing: border-box; /* Ensures padding is included in width and height */
+}
+
+.classbox-row {
+  font-size: 0.80rem;
+  width: 100%;
+  height: 33.33%;
+  margin: 0;
+  font-weight: bold;
+}
+
+.left-align {
+  text-align: left;
+}
+
+.right-align {
+  text-align: right;
 }
 
 .add-class-button {
   font-size: 0.9rem; /* Adjusted font size to 90% */
   cursor: pointer;
   color: #333;
-  min-height: 27px; /* Adjusted height to 90% */
-  width: 54%; /* Adjusted width to 90% */
+  height: 50px; /* Fixed height to match classbox */
+  width: 80px; /* Fixed width to match classbox */
   border: 1px dashed grey;
   margin: 13.5px; /* Adjusted margin to 90% */
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 9px; /* Adjusted padding to 90% */
+  box-sizing: border-box; /* Ensures padding is included in width and height */
 }
 
 .semester-footer {
@@ -157,8 +182,81 @@ body {
 
 .footer-box {
   min-height: 20px; /* Half of class box height (27px) */
-  width: 70%; /* Same as class box width */
+  width: 80px; /* Same as class box width */
+  position: absolute;
+  bottom: 00;
   background-color: rgb(224, 224, 224);
   border: 1px solid rgba(96, 96, 96, 0.388);
   margin-bottom: 10px;
+  text-align: center;
+  padding-top: 2px;
+}
+
+/* Modal styles */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1001; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+  height: 50%;
+  max-height: 300px;
+  max-width: 400px; /* Max width of the modal */
+}
+
+.modal-content h2 {
+  margin-bottom: 20px;
+}
+
+.modal-content label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.modal-content input {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+.add-class-btn {
+  background-color: darkgreen;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  float: right;
+}
+
+.add-class-btn:hover {
+  background-color: green;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
 }
