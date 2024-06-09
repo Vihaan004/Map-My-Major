@@ -123,6 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function addClassBox(semester, classDetails) {
         const classbox = document.createElement('div');
         classbox.classList.add('classbox');
+        classbox.draggable = true;
 
         const classNameRow = document.createElement('div');
         classNameRow.classList.add('classbox-row', 'left-align');
@@ -133,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
         requirementsRow.textContent = classDetails.requirements || ' ';
 
         const creditHoursRow = document.createElement('div');
-        creditHoursRow.classList.add('classbox-row', 'right-align');
+        creditHoursRow.classList.add('classbox-row', 'right-align', 'credits');
         creditHoursRow.textContent = classDetails.creditHours;
 
         classbox.appendChild(classNameRow);
@@ -141,6 +142,20 @@ document.addEventListener('DOMContentLoaded', () => {
         classbox.appendChild(creditHoursRow);
 
         semester.insertBefore(classbox, semester.querySelector('.add-class-button'));
+
+        updateCreditHoursSum(semester); // Update the credit hours sum
+    }
+
+    function updateCreditHoursSum(semester) {
+        const classBoxes = semester.querySelectorAll('.classbox');
+        let totalCreditHours = 0;
+        classBoxes.forEach(classBox => {
+            // totalCreditHours += parseInt(classBox.dataset.creditHours, 10);
+            totalCreditHours += parseInt(classBox.querySelector('.credits').textContent, 10);
+        });
+        const creditHoursSum = semester.querySelector('.credit-hours-sum');
+        creditHoursSum.textContent = totalCreditHours;
+
     }
 
     function removeSemester(semester) {
