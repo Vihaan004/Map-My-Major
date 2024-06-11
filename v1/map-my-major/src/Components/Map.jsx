@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import Semester from './Semester';
 import './styles/Map.css';
 
-function Map({ numSemesters }) {
+function Map() {
   const [semesters, setSemesters] = useState([]);
 
   useEffect(() => {
-    initializeSemesters(numSemesters);
-  }, [numSemesters]);
+    initializeSemesters(8); // Default to 8 semesters
+  }, []);
 
   const initializeSemesters = (numSemesters) => {
     const initialSemesters = [];
@@ -36,6 +36,16 @@ function Map({ numSemesters }) {
     setSemesters(updatedSemesters);
   };
 
+  const addClass = (semesterId, newClass) => {
+    const updatedSemesters = semesters.map((semester) => {
+      if (semester.id === semesterId) {
+        return { ...semester, classes: [...semester.classes, newClass] };
+      }
+      return semester;
+    });
+    setSemesters(updatedSemesters);
+  };
+
   return (
     <div className="map-container">
       {semesters.map((semester, index) => (
@@ -44,6 +54,7 @@ function Map({ numSemesters }) {
           index={index}
           semester={semester}
           removeSemester={removeSemester}
+          addClass={addClass}
         />
       ))}
       <div className="new-semester" onClick={addSemester}>
