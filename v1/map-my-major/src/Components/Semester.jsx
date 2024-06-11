@@ -14,9 +14,6 @@ function Semester({ index, semester, removeSemester }) {
             onClick={() => removeSemester(semester.id)}
           />
         </div>
-        <h3 className="sem-name">
-          {semester.season} {semester.year}
-        </h3>
       </div>
       <div className="add-class-button">+</div>
       <div className="semester-footer">

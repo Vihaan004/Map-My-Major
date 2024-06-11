@@ -2,31 +2,28 @@ import React, { useState, useEffect } from 'react';
 import Semester from './Semester';
 import './styles/Map.css';
 
-function Map({ startSeason, startYear, numSemesters }) {
+function Map({ numSemesters }) {
   const [semesters, setSemesters] = useState([]);
 
   useEffect(() => {
-    initializeSemesters(startSeason, startYear, numSemesters);
-  }, [startSeason, startYear, numSemesters]);
+    initializeSemesters(numSemesters);
+  }, [numSemesters]);
 
-  const initializeSemesters = (startSeason, startYear, numSemesters) => {
+  const initializeSemesters = (numSemesters) => {
     const initialSemesters = [];
     for (let i = 0; i < numSemesters; i++) {
-      initialSemesters.push(createSemester(i, startSeason, startYear));
+      initialSemesters.push(createSemester(i));
     }
     setSemesters(initialSemesters);
   };
 
-  const createSemester = (index, startSeason, startYear) => {
-    const season = (index % 2 === 0) ? startSeason : (startSeason === 'Fall' ? 'Spring' : 'Fall');
-    const year = startYear + Math.floor(index / 2);
-    return { id: index, season, year, classes: [] };
+  const createSemester = (index) => {
+    return { id: index, classes: [] };
   };
 
   const addSemester = () => {
     if (semesters.length < 12) {
-      const lastSemester = semesters[semesters.length - 1];
-      const newSemester = createSemester(semesters.length, lastSemester.season, lastSemester.year);
+      const newSemester = createSemester(semesters.length);
       setSemesters([...semesters, newSemester]);
     } else {
       alert('Maximum of 12 semesters reached.');
@@ -35,7 +32,7 @@ function Map({ startSeason, startYear, numSemesters }) {
 
   const removeSemester = (id) => {
     let updatedSemesters = semesters.filter((semester) => semester.id !== id);
-    updatedSemesters = updatedSemesters.map((semester, index) => createSemester(index, updatedSemesters[0].season, updatedSemesters[0].year));
+    updatedSemesters = updatedSemesters.map((semester, index) => createSemester(index));
     setSemesters(updatedSemesters);
   };
 
