@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Semester from './Semester';
 import './styles/Map.css';
+import Navbar from './Navbar';
 
 function Map() {
   const [semesters, setSemesters] = useState([]);
@@ -46,8 +47,12 @@ function Map() {
     setSemesters(updatedSemesters);
   };
 
+  const totalCredits = semesters.reduce((sum, semester) => 
+    sum + semester.classes.reduce((semSum, classItem) => semSum + parseInt(classItem.creditHours, 10), 0), 0);
+
   return (
     <div className="map-container">
+      <Navbar totalCredits={totalCredits} />
       {semesters.map((semester, index) => (
         <Semester
           key={semester.id}
