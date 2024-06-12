@@ -19,32 +19,87 @@
 }
 
 .requirements-container {
-  font-size: 0.85rem;
+  font-size: 1rem;
   font-weight: 300;
   text-align: center;
-  /* margin-top: 20px; */
   padding: 10px 0;
   border-top: 1px dashed white;
   border-bottom: 1px dashed white;
 }
 
 .requirements-title {
-  /* margin-bottom: 10px; */
+  margin-bottom: 10px;
+}
+
+.credit-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 20px;
+}
+
+.credit-total-box {
+  width: 30%;
+  height: 18px;
+  display: inline-block;
+  position: relative;
+}
+
+.credit-goal-button {
+  font-size: 1rem;
+  text-align: center;
+  background: none;
+  color: white;
+  border: 1px solid white;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 2% 10px 0px 10px;
+  margin-left: 5px;
+}
+
+.credit-goal-button:hover {
+  background-color: white;
+  color: darkgreen;
+} 
+
+.goal-form {
+  display: flex;
+  align-items: center;
+  width: 70px;
+  height: 40px;
+}
+
+.goal-input {
+  width: 50%;
+  height: 100%;
+  padding: 2px;
+  font-size: 1rem;
+  margin-right: 5px;
+}
+
+.goal-submit-button {
+  font-size: 0.8rem;
+  color: white;
+  border: none;
+  padding: 2px 5px;
+  cursor: pointer;
+}
+
+.goal-submit-button:hover {
+  background-color: green;
 }
 
 .requirement-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* margin-bottom: 10px; */
-  margin: 0 10px;
+  margin: 0 20px;
 }
 
 .requirement-box {
   width: 30%;
   height: 18px;
-  background-color: #f0f0f0;
-  border: 1px solid #ddd;
+  background-color: white;
   display: inline-block;
   margin-left: 10px;
 }
