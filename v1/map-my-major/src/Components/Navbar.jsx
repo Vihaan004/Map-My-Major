@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './styles/Navbar.css';
 
-function Navbar() {
+function Navbar({ totalCredits }) {
   const [showModal, setShowModal] = useState(false);
   const [requirements, setRequirements] = useState([]);
   const [requirementName, setRequirementName] = useState('');
@@ -26,18 +26,18 @@ function Navbar() {
   };
 
   const handleGoalChange = (e) => {
+    const value = e.target.value.replace(/[^0-9]/g, '');
+    setCreditGoal(value);
     if (e.key === 'Enter' || e.type === 'blur') {
       setIsEditingGoal(false);
-    } else {
-      const value = e.target.value.replace(/[^0-9]/g, '');
-      setCreditGoal(value);
     }
   };
 
   const handleRequirementGoalChange = (e, index) => {
+    const value = e.target.value.replace(/[^0-9]/g, '');
     const updatedRequirements = requirements.map((req, reqIndex) => {
       if (reqIndex === index) {
-        return { ...req, goal: e.target.value.replace(/[^0-9]/g, '') };
+        return { ...req, goal: value };
       }
       return req;
     });
@@ -56,7 +56,7 @@ function Navbar() {
               type="text"
               className="current-box"
               readOnly
-              value={0} // Update this to dynamically calculate total credits if needed
+              value={totalCredits} // Display total credits
             />
             <span className="separator">/</span>
             {isEditingGoal ? (

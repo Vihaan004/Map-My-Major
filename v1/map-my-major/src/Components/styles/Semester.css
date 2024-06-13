@@ -93,7 +93,7 @@
 .add-class-modal {
   display: flex;
   position: fixed;
-  z-index: 1000; /* High z-index for modal */
+  z-index: 2000; /* High z-index for modal */
   left: 0;
   top: 0;
   width: 100%;
