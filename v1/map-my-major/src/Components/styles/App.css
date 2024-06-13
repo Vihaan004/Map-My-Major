@@ -1,7 +1,7 @@
 .controls {
   display: flex;
   justify-content: flex-start;
-  width: calc(98% - 225px); 
+  width: calc(98% - 225px);
   height: 35px;
   margin-left: 230px;
   margin-top: 5px;

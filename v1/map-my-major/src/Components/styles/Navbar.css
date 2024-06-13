@@ -31,77 +31,52 @@
   margin-bottom: 10px;
 }
 
-.credit-total {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 0 20px;
-}
-
-.credit-total-box {
-  width: 30%;
-  height: 18px;
-  display: inline-block;
-  position: relative;
-}
-
-.credit-goal-button {
-  font-size: 1rem;
-  text-align: center;
-  background: none;
-  color: white;
-  border: 1px solid white;
-  border-radius: 5px;
-  cursor: pointer;
-  padding: 2% 10px 0px 10px;
-  margin-left: 5px;
-}
-
-.credit-goal-button:hover {
-  background-color: white;
-  color: darkgreen;
-} 
-
-.goal-form {
-  display: flex;
-  align-items: center;
-  width: 70px;
-  height: 40px;
-}
-
-.goal-input {
-  width: 50%;
-  height: 100%;
-  padding: 2px;
-  font-size: 1rem;
-  margin-right: 5px;
-}
-
-.goal-submit-button {
-  font-size: 0.8rem;
-  color: white;
-  border: none;
-  padding: 2px 5px;
-  cursor: pointer;
-}
-
-.goal-submit-button:hover {
-  background-color: green;
-}
-
 .requirement-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 0 20px;
+  margin: 0 10px;
 }
 
-.requirement-box {
-  width: 30%;
-  height: 18px;
+.requirement-label {
+  flex: 1;
+  text-align: left;
+}
+
+.requirement-box-container {
+  width: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.current-box,
+.goal-box {
+  width: 30px;
+  height: 20px;
   background-color: white;
-  display: inline-block;
-  margin-left: 10px;
+  border: 1px solid white;
+  text-align: center;
+  margin-top: 10%;
+}
+
+.current-box {
+  background-color: darkgreen;
+  color: white;
+}
+
+.separator {
+  margin: 0 5px;
+}
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
 }
 
 .add-requirement-button {

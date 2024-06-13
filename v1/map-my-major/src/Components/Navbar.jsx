@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './styles/Navbar.css';
 
-function Navbar({ totalCredits }) {
+function Navbar() {
   const [showModal, setShowModal] = useState(false);
   const [requirements, setRequirements] = useState([]);
   const [requirementName, setRequirementName] = useState('');
@@ -9,6 +9,7 @@ function Navbar({ totalCredits }) {
   const [requirementGoal, setRequirementGoal] = useState('');
   const [creditGoal, setCreditGoal] = useState(null);
   const [isEditingGoal, setIsEditingGoal] = useState(false);
+  const [editingRequirementIndex, setEditingRequirementIndex] = useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -24,9 +25,23 @@ function Navbar({ totalCredits }) {
     setRequirementGoal('');
   };
 
-  const handleGoalSubmit = (e) => {
-    e.preventDefault();
-    setIsEditingGoal(false);
+  const handleGoalChange = (e) => {
+    if (e.key === 'Enter' || e.type === 'blur') {
+      setIsEditingGoal(false);
+    } else {
+      const value = e.target.value.replace(/[^0-9]/g, '');
+      setCreditGoal(value);
+    }
+  };
+
+  const handleRequirementGoalChange = (e, index) => {
+    const updatedRequirements = requirements.map((req, reqIndex) => {
+      if (reqIndex === index) {
+        return { ...req, goal: e.target.value.replace(/[^0-9]/g, '') };
+      }
+      return req;
+    });
+    setRequirements(updatedRequirements);
   };
 
   return (
@@ -34,35 +49,72 @@ function Navbar({ totalCredits }) {
       <h1 className="title">Map My Major</h1>
       <div className="requirements-container">
         <div className="requirements-title">Requirements:</div>
-        <div className="credit-total">
-          <label>Total</label>
-          <div className="credit-total-box">
-            {totalCredits} / {creditGoal ?? (
-              <button
-                className="credit-goal-button"
+        <div className="requirement-item">
+          <label className="requirement-label">Total</label>
+          <div className="requirement-box-container">
+            <input
+              type="text"
+              className="current-box"
+              readOnly
+              value={0} // Update this to dynamically calculate total credits if needed
+            />
+            <span className="separator">/</span>
+            {isEditingGoal ? (
+              <input
+                type="number"
+                className="goal-box"
+                placeholder="Set"
+                value={creditGoal || ''}
+                onChange={handleGoalChange}
+                onBlur={handleGoalChange}
+                onKeyPress={handleGoalChange}
+                min="0"
+              />
+            ) : (
+              <input
+                type="text"
+                className="goal-box"
+                placeholder="Set"
+                value={creditGoal || ''}
+                readOnly
                 onClick={() => setIsEditingGoal(true)}
-              >+</button>
-            )}
-            {isEditingGoal && (
-              <form onSubmit={handleGoalSubmit} className="goal-form">
-                <input
-                  type="number"
-                  value={creditGoal}
-                  onChange={(e) => setCreditGoal(e.target.value)}
-                  required
-                  min="1"
-                  max="999"
-                  className="goal-input"
-                />
-                <button type="submit" className="goal-submit-button">Set</button>
-              </form>
+              />
             )}
           </div>
         </div>
         {requirements.map((req, index) => (
           <div key={index} className="requirement-item">
-            <label>{req.name}</label>
-            <div className="requirement-box"></div>
+            <label className="requirement-label">{req.name}</label>
+            <div className="requirement-box-container">
+              <input
+                type="text"
+                className="current-box"
+                readOnly
+                value={0} // This should be calculated based on actual classes/credits
+              />
+              <span className="separator">/</span>
+              {editingRequirementIndex === index ? (
+                <input
+                  type="number"
+                  className="goal-box"
+                  value={req.goal}
+                  onChange={(e) => handleRequirementGoalChange(e, index)}
+                  onBlur={() => setEditingRequirementIndex(null)}
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') setEditingRequirementIndex(null);
+                  }}
+                  min="0"
+                />
+              ) : (
+                <input
+                  type="text"
+                  className="goal-box"
+                  value={req.goal}
+                  readOnly
+                  onClick={() => setEditingRequirementIndex(index)}
+                />
+              )}
+            </div>
           </div>
         ))}
         <div className="add-requirement-button" onClick={() => setShowModal(true)}>+</div>
@@ -86,8 +138,8 @@ function Navbar({ totalCredits }) {
                   value={requirementType}
                   onChange={(e) => setRequirementType(e.target.value)}
                 >
-                  <option value="credits">Credits</option>
-                  <option value="classes">Classes</option>
+                  <option value="Credits">Credits</option>
+                  <option value="Classes">Classes</option>
                 </select>
                 <label htmlFor="requirementGoal">Goal: *</label>
                 <input
