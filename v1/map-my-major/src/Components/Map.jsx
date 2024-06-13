@@ -2,12 +2,16 @@ import React, { useState, useEffect } from 'react';
 import Semester from './Semester';
 import './styles/Map.css';
 
-function Map() {
+function Map({ numSemesters, setTotalCredits }) {
   const [semesters, setSemesters] = useState([]);
 
   useEffect(() => {
-    initializeSemesters(8); // Default to 8 semesters
-  }, []);
+    initializeSemesters(numSemesters); // Initialize the semesters based on the given number
+  }, [numSemesters]);
+
+  useEffect(() => {
+    calculateTotalCredits(); // Recalculate total credits whenever semesters change
+  }, [semesters]);
 
   const initializeSemesters = (numSemesters) => {
     const initialSemesters = [];
@@ -32,7 +36,6 @@ function Map() {
 
   const removeSemester = (id) => {
     let updatedSemesters = semesters.filter((semester) => semester.id !== id);
-    updatedSemesters = updatedSemesters.map((semester, index) => createSemester(index));
     setSemesters(updatedSemesters);
   };
 
@@ -44,6 +47,19 @@ function Map() {
       return semester;
     });
     setSemesters(updatedSemesters);
+  };
+
+  const calculateTotalCredits = () => {
+    const total = semesters.reduce((acc, semester) => {
+      return (
+        acc +
+        semester.classes.reduce((semAcc, classItem) => {
+          return semAcc + parseInt(classItem.creditHours, 10);
+        }, 0)
+      );
+    }, 0);
+    console.log("Total credits updated to: " + total);
+    setTotalCredits(total); // Update total credits
   };
 
   return (
