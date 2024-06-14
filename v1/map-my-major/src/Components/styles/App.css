@@ -1,7 +1,16 @@
-.controls {
+.delete-icon {
+  cursor: pointer;
+  width: 12.6px;
+  height: 12.6px;
+  opacity: 30%;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* .controls {
   display: flex;
   justify-content: flex-start;
-  width: calc(98% - 225px); 
+  width: calc(98% - 225px);
   height: 35px;
   margin-left: 230px;
   margin-top: 5px;
@@ -10,25 +19,7 @@
   border: 1px solid rgba(96, 96, 96, 0.388);
   position: fixed;
   z-index: 999;
-}
-
-.semester {
-  background-color: #f0f0f0;
-  width: 100px; 
-  margin: 0 15px;
-  border: 1px solid #ddd;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: auto;
-  z-index: 10;
-}
-
-
-
-
+} */
 
 
 
