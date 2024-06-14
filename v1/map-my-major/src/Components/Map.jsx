@@ -4,6 +4,7 @@ import './styles/Map.css';
 
 function Map({ numSemesters, setTotalCredits }) {
   const [semesters, setSemesters] = useState([]);
+  const [deleteMode, setDeleteMode] = useState(false);
 
   useEffect(() => {
     initializeSemesters(numSemesters); // Initialize the semesters based on the given number
@@ -49,6 +50,17 @@ function Map({ numSemesters, setTotalCredits }) {
     setSemesters(updatedSemesters);
   };
 
+  const deleteClass = (semesterId, classIndex) => {
+    const updatedSemesters = semesters.map((semester) => {
+      if (semester.id === semesterId) {
+        const updatedClasses = semester.classes.filter((_, index) => index !== classIndex);
+        return { ...semester, classes: updatedClasses };
+      }
+      return semester;
+    });
+    setSemesters(updatedSemesters);
+  };
+
   const calculateTotalCredits = () => {
     const total = semesters.reduce((acc, semester) => {
       return (
@@ -63,18 +75,31 @@ function Map({ numSemesters, setTotalCredits }) {
   };
 
   return (
-    <div className="map-container">
-      {semesters.map((semester, index) => (
-        <Semester
-          key={semester.id}
-          index={index}
-          semester={semester}
-          removeSemester={removeSemester}
-          addClass={addClass}
-        />
-      ))}
-      <div className="new-semester" onClick={addSemester}>
-        <div id="plus">+</div>
+    <div>
+      <div className="controls">
+        <div className="controls-list">
+          <div className="control-item">
+            <button onClick={() => setDeleteMode(!deleteMode)}>
+              Delete Mode<img src="src/assets/images/delete.png" className="control-icon delete-icon"/>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div className="map-container">
+        {semesters.map((semester, index) => (
+          <Semester
+            key={semester.id}
+            index={index}
+            semester={semester}
+            removeSemester={removeSemester}
+            addClass={addClass}
+            deleteClass={deleteClass}
+            deleteMode={deleteMode}
+          />
+        ))}
+        <div className="new-semester" onClick={addSemester}>
+          <div id="plus">+</div>
+        </div>
       </div>
     </div>
   );
