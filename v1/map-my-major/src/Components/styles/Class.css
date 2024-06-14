@@ -11,6 +11,14 @@
     padding-left: 5px; 
     padding-top: 2px;
     box-sizing: border-box;
+    cursor: pointer;
+    position: relative;
+  }
+  
+  .classbox:hover.delete-mode {
+    filter: blur(1px) brightness(90%);
+    background-color: red; 
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.71);
   }
   
   .classbox-row {

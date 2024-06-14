@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import Class from './Class';
 import './styles/Semester.css';
 
-function Semester({ index, semester, removeSemester, addClass }) {
+function Semester({ index, semester, removeSemester, addClass, deleteClass, deleteMode }) {
   const [showModal, setShowModal] = useState(false);
   const [className, setClassName] = useState('');
   const [requirements, setRequirements] = useState('');
@@ -35,7 +35,12 @@ function Semester({ index, semester, removeSemester, addClass }) {
     <div className="semester">
       <div className="semester-head">
         <div className="sem-label-container">
-          <h2 className="sem-label">Sem {index + 1}</h2>
+          <h2
+            className={`sem-label ${deleteMode ? 'delete-mode' : ''}`}
+            onClick={deleteMode ? () => removeSemester(semester.id) : null}
+          >
+            Sem {index + 1}
+          </h2>
           <img
             className="delete-semester"
             src="src/assets/images/delete.png"
@@ -50,6 +55,8 @@ function Semester({ index, semester, removeSemester, addClass }) {
           className={classItem.className}
           requirements={classItem.requirements}
           creditHours={classItem.creditHours}
+          deleteMode={deleteMode}
+          onClick={() => deleteMode && deleteClass(semester.id, classIndex)}
         />
       ))}
       <div className="add-class-button" onClick={() => setShowModal(true)}>+</div>

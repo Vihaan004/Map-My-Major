@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Navbar from './Navbar';
-import Controls from './Controls';
 import Map from './Map';
 import './styles/App.css';
 
@@ -15,7 +14,6 @@ function App() {
   return (
     <div className="App">
       <Navbar totalCredits={totalCredits} />
-      <Controls />
       <Map numSemesters={numSemesters} setTotalCredits={setTotalCredits} />
     </div>
   );
