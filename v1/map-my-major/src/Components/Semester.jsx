@@ -33,20 +33,18 @@ function Semester({ index, semester, removeSemester, addClass, deleteClass, dele
 
   return (
     <div className="semester">
-      <div className="semester-head">
+      <div className={`semester-head ${deleteMode ? 'delete-mode' : ''}`}
+           onClick={deleteMode ? () => removeSemester(semester.id) : null}>
         <div className="sem-label-container">
-          <h2
-            className={`sem-label ${deleteMode ? 'delete-mode' : ''}`}
-            onClick={deleteMode ? () => removeSemester(semester.id) : null}
-          >
+          <h2 className="sem-label">
             Sem {index + 1}
           </h2>
-          <img
+          {/* <img
             className="delete-semester"
             src="src/assets/images/delete.png"
             alt="delete"
             onClick={() => removeSemester(semester.id)}
-          />
+          /> */}
         </div>
       </div>
       {semester.classes.map((classItem, classIndex) => (

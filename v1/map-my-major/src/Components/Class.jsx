@@ -1,7 +1,7 @@
 import React from 'react';
 import './styles/Class.css';
 
-function ClassBox({ className, requirements, creditHours, deleteMode, onClick }) {
+function Class({ className, requirements, creditHours, deleteMode, onClick }) {
   return (
     <div className={`classbox ${deleteMode ? 'delete-mode' : ''}`} onClick={onClick}>
       <div className="classbox-row left-align">{className}</div>
@@ -11,4 +11,4 @@ function ClassBox({ className, requirements, creditHours, deleteMode, onClick })
   );
 }
 
-export default ClassBox;
+export default Class;

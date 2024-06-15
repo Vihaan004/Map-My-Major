@@ -23,6 +23,11 @@
   color: rgb(96, 96, 96);
 }
 
+.semester-head.delete-mode:hover {
+  cursor: pointer;
+  color: red;
+}
+
 .sem-label-container {
   font-size: 0.585rem;
   display: flex;
