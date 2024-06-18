@@ -1,17 +1,19 @@
+require('dotenv').config({ path: __dirname + '/.env' });
 const express = require('express');
 const cors = require('cors');
-const dotenv = require('dotenv');
+
 const userRoutes = require('./routes/userRoutes');
 const mapRoutes = require('./routes/mapRoutes');
 const semesterRoutes = require('./routes/semesterRoutes');
 const classRoutes = require('./routes/classRoutes');
 
-dotenv.config();
-
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+// Verify JWT_SECRET is loaded
+console.log('JWT_SECRET:', process.env.JWT_SECRET);
 
 // Define routes
 app.use('/api/users', userRoutes);
