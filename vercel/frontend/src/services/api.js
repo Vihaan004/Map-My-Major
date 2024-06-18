@@ -10,14 +10,18 @@ const login = async (userData) => {
   return axios.post(`${API_URL}/users/login`, userData);
 };
 
-const getMaps = async (token) => {
-  return axios.get(`${API_URL}/maps`, {
-    headers: {
-      Authorization: `Bearer ${token}`
+const createMap = async (mapName, token) => {
+  return axios.post(
+    `${API_URL}/maps`,
+    { name: mapName },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     }
-  });
+  );
 };
 
 // Add more API methods as needed...
 
-export { register, login, getMaps };
+export { register, login, createMap };
