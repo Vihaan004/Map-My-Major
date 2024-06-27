@@ -98,15 +98,17 @@ const Home = () => {
               <div className="map-card-header">
                 {editingMapId === map.id ? (
                   <input
+                    className='map-rename'
                     type="text"
                     value={newMapName}
+                    maxLength="20"
                     onChange={(e) => setNewMapName(e.target.value)}
                     onBlur={() => handleSaveRename(map.id)}
                     onKeyDown={(e) => handleKeyDown(e, map.id)}
                     autoFocus
                   />
                 ) : (
-                  <h3>{map.name}</h3>
+                  <h3 className="map-name">{map.name}</h3>
                 )}
                 <div className="map-actions">
                   <img

@@ -2,7 +2,7 @@ const { Map } = require('../models');
 
 exports.createMap = async (req, res) => {
   try {
-    const map = await Map.create({ name: '', userId: req.userId });
+    const map = await Map.create({ name: 'New Map', userId: req.userId });
     console.log(`-----MAP CREATED: ${map.name} by user ${req.userId}`);
     res.status(201).json(map);
   } catch (error) {
