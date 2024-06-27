@@ -1,6 +1,7 @@
 .map-grid {
+  margin: 20px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 16px;
 }
 
@@ -16,8 +17,15 @@
   align-items: center;
 }
 
-.rename-box {
+.map-rename {
   width: 50%;
+  font-size: 1em;
+}
+
+.map-name {
+  margin: 0;
+  flex-grow: 1;
+  text-align: left;
 }
 
 .map-actions {
@@ -30,3 +38,4 @@
   height: 24px;
   cursor: pointer;
 }
+
