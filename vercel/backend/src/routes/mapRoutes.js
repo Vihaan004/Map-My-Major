@@ -1,6 +1,6 @@
 const express = require('express');
-const { createMap, getMaps, updateMap, deleteMap } = require('../controllers/mapController');
 const { authenticate } = require('../middleware/authMiddleware');
+const { createMap, getMaps, updateMap, deleteMap } = require('../controllers/mapController');
 const router = express.Router();
 
 router.post('/', authenticate, createMap);

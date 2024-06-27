@@ -22,6 +22,32 @@ const createMap = async (mapName, token) => {
   );
 };
 
-// Add more API methods as needed...
+const getMaps = async (token) => {
+  return axios.get(`${API_URL}/maps`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
 
-export { register, login, createMap };
+const updateMap = async (mapId, newName, token) => {
+  return axios.put(
+    `${API_URL}/maps/${mapId}`,
+    { name: newName },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+};
+
+const deleteMap = async (mapId, token) => {
+  return axios.delete(`${API_URL}/maps/${mapId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export { register, login, createMap, getMaps, updateMap, deleteMap };
