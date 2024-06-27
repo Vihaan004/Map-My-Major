@@ -1,4 +1,4 @@
-const { User } = require('../models');
+const { User, Map, Semester } = require('../models');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -15,7 +15,12 @@ exports.register = async (req, res) => {
     const user = await User.create({ username, email, password: hashedPassword });
     const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-    // Log a clean success message with user details
+    // Create default map with 8 semesters
+    const map = await Map.create({ name: 'Map 0', userId: user.id });
+    for (let i = 1; i <= 8; i++) {
+      await Semester.create({ index: i, mapId: map.id });
+    }
+
     console.log(`-----USER REGISTERED: ${user.username} (${user.email})`);
 
     res.status(201).json({ token, userId: user.id });
