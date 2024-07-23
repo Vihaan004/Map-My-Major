@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getMaps, createMap, updateMap, deleteMap } from '../services/api';
 import './Home.css';
 
@@ -7,6 +8,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [editingMapId, setEditingMapId] = useState(null);
   const [newMapName, setNewMapName] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMaps = async () => {
@@ -85,6 +87,10 @@ const Home = () => {
     }
   };
 
+  const handleOpenMap = (mapName) => {
+    navigate(`/maps/${mapName}`);
+  };
+
   return (
     <div>
       <h1>Welcome to Map-My-Major</h1>
@@ -94,33 +100,32 @@ const Home = () => {
       ) : (
         <div className="map-grid">
           {maps.map((map) => (
-            <div key={map.id} className="map-card">
+            <div key={map.id} className="map-card" onClick={() => handleOpenMap(map.name)}>
               <div className="map-card-header">
                 {editingMapId === map.id ? (
                   <input
                     className='map-rename'
                     type="text"
                     value={newMapName}
-                    maxLength="20"
                     onChange={(e) => setNewMapName(e.target.value)}
                     onBlur={() => handleSaveRename(map.id)}
                     onKeyDown={(e) => handleKeyDown(e, map.id)}
                     autoFocus
                   />
                 ) : (
-                  <h3 className="map-name">{map.name}</h3>
+                  <h3>{map.name}</h3>
                 )}
                 <div className="map-actions">
                   <img
                     src={`${process.env.PUBLIC_URL}/icons/rename-icon.svg`}
                     alt="Rename"
-                    onClick={() => handleRenameMap(map.id)}
+                    onClick={(e) => { e.stopPropagation(); handleRenameMap(map.id); }}
                     className="action-icon"
                   />
                   <img
                     src={`${process.env.PUBLIC_URL}/icons/delete-icon.svg`}
                     alt="Delete"
-                    onClick={() => handleDeleteMap(map.id)}
+                    onClick={(e) => { e.stopPropagation(); handleDeleteMap(map.id); }}
                     className="action-icon"
                   />
                 </div>

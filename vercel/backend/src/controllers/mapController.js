@@ -1,4 +1,4 @@
-const { Map } = require('../models');
+const { Map, Semester, Class } = require('../models');
 
 exports.createMap = async (req, res) => {
   try {
@@ -13,11 +13,41 @@ exports.createMap = async (req, res) => {
 
 exports.getMaps = async (req, res) => {
   try {
-    const maps = await Map.findAll({ where: { userId: req.userId } });
+    const maps = await Map.findAll({
+      where: { userId: req.userId },
+      include: [
+        {
+          model: Semester,
+          as: 'semesters',
+          include: [{ model: Class, as: 'classes' }]
+        }
+      ]
+    });
     res.status(200).json(maps);
   } catch (error) {
     console.error('Error in getMaps endpoint:', error);
     res.status(500).json({ error: 'Failed to retrieve maps' });
+  }
+};
+
+exports.getMapByName = async (req, res) => {
+  const { name } = req.params;
+  try {
+    const map = await Map.findOne({ 
+      where: { name, userId: req.userId },
+      include: [{
+        model: Semester,
+        as: 'semesters',
+        include: [{ model: Class, as: 'classes' }]
+      }]
+    });
+    if (!map) {
+      return res.status(404).json({ error: 'Map not found' });
+    }
+    res.status(200).json(map);
+  } catch (error) {
+    console.error('Error in getMapByName endpoint:', error);
+    res.status(500).json({ error: 'Failed to retrieve map' });
   }
 };
 
@@ -55,6 +85,69 @@ exports.deleteMap = async (req, res) => {
     await map.destroy();
     res.status(200).json({ message: 'Map deleted' });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to delete map' });
+    res.status500.json({ error: 'Failed to delete map' });
+  }
+};
+
+exports.addSemester = async (req, res) => {
+  const { mapId } = req.params;
+  try {
+    const map = await Map.findByPk(mapId);
+    if (!map) {
+      return res.status(404).json({ error: 'Map not found' });
+    }
+    const index = await Semester.count({ where: { mapId } }) + 1;
+    const semester = await Semester.create({ mapId, index });
+    res.status(201).json(semester);
+  } catch (error) {
+    console.error('Error in addSemester endpoint:', error);
+    res.status(500).json({ error: 'Failed to add semester' });
+  }
+};
+
+exports.addClass = async (req, res) => {
+  const { semesterId } = req.params;
+  const { name } = req.body;
+  try {
+    const semester = await Semester.findByPk(semesterId);
+    if (!semester) {
+      return res.status(404).json({ error: 'Semester not found' });
+    }
+    const classCount = await Class.count({ where: { semesterId } });
+    const classObj = await Class.create({ semesterId, name, position: classCount + 1 });
+    res.status(201).json(classObj);
+  } catch (error) {
+    console.error('Error in addClass endpoint:', error);
+    res.status(500).json({ error: 'Failed to add class' });
+  }
+};
+
+exports.deleteSemester = async (req, res) => {
+  const { semesterId } = req.params;
+  try {
+    const semester = await Semester.findByPk(semesterId);
+    if (!semester) {
+      return res.status(404).json({ error: 'Semester not found' });
+    }
+    await semester.destroy();
+    res.status(200).json({ message: 'Semester deleted' });
+  } catch (error) {
+    console.error('Error in deleteSemester endpoint:', error);
+    res.status(500).json({ error: 'Failed to delete semester' });
+  }
+};
+
+exports.deleteClass = async (req, res) => {
+  const { classId } = req.params;
+  try {
+    const classObj = await Class.findByPk(classId);
+    if (!classObj) {
+      return res.status(404).json({ error: 'Class not found' });
+    }
+    await classObj.destroy();
+    res.status(200).json({ message: 'Class deleted' });
+  } catch (error) {
+    console.error('Error in deleteClass endpoint:', error);
+    res.status(500).json({ error: 'Failed to delete class' });
   }
 };

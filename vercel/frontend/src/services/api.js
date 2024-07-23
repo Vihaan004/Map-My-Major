@@ -50,4 +50,44 @@ const deleteMap = async (mapId, token) => {
   });
 };
 
-export { register, login, createMap, getMaps, updateMap, deleteMap };
+const getMap = async (mapName, token) => {
+  return axios.get(`${API_URL}/maps/${mapName}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+const addSemester = (mapId, token) => {
+  return axios.post(`${API_URL}/maps/${mapId}/semesters`, {}, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+const addClass = async (semesterId, name, token) => {
+  return axios.post(`${API_URL}/semesters/${semesterId}/classes`, { name }, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+const deleteSemester = async (semesterId, token) => {
+  return axios.delete(`${API_URL}/semesters/${semesterId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+const deleteClass = async (classId, token) => {
+  return axios.delete(`${API_URL}/classes/${classId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export { register, login, createMap, getMaps, updateMap, deleteMap, getMap, addSemester, addClass, deleteSemester, deleteClass };

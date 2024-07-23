@@ -13,7 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 // Verify JWT_SECRET is loaded
-console.log('JWT_SECRET:', process.env.JWT_SECRET);
+// console.log('JWT_SECRET:', process.env.JWT_SECRET);
 
 // Define routes
 app.use('/api/users', userRoutes);
