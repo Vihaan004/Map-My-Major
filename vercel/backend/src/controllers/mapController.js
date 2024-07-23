@@ -2,9 +2,17 @@ const { Map, Semester, Class } = require('../models');
 
 exports.createMap = async (req, res) => {
   try {
-    const map = await Map.create({ name: 'New Map', userId: req.userId });
+    const map = await Map.create({ name: req.body.name || 'New Map', userId: req.userId });
     console.log(`-----MAP CREATED: ${map.name} by user ${req.userId}`);
-    res.status(201).json(map);
+
+    // Create 8 default semesters
+    const semesters = [];
+    for (let i = 1; i <= 8; i++) {
+      const semester = await Semester.create({ mapId: map.id, index: i });
+      semesters.push(semester);
+    }
+
+    res.status(201).json({ ...map.toJSON(), semesters });
   } catch (error) {
     console.error('Error in createMap endpoint:', error);
     res.status(500).json({ error: 'Failed to create map' });

@@ -5,13 +5,13 @@ const router = express.Router();
 
 router.post('/', authenticate, createMap);
 router.get('/', authenticate, getMaps);
-router.get('/:name', authenticate, getMapByName); // Ensure this line is present
+router.get('/:name', authenticate, getMapByName); // Update this line to get map by name
 router.put('/:id', authenticate, updateMap);
 router.delete('/:id', authenticate, deleteMap);
 
-router.post('/:mapId/semesters', authenticate, addSemester);
-router.post('/semesters/:semesterId/classes', authenticate, addClass);
-router.delete('/semesters/:semesterId', authenticate, deleteSemester);
-router.delete('/classes/:classId', authenticate, deleteClass);
+router.post('/:mapId/semesters', addSemester);
+router.post('/semesters/:semesterId/classes', addClass);
+router.delete('/semesters/:semesterId', deleteSemester);
+router.delete('/classes/:classId', deleteClass);
 
 module.exports = router;

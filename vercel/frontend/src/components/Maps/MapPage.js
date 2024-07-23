@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { getMap } from '../../services/api';
 import './MapPage.css';
 
 const MapPage = () => {
@@ -9,9 +10,17 @@ const MapPage = () => {
 
   useEffect(() => {
     const fetchMap = async () => {
-      // For now, we'll just simulate the fetching process
-      setLoading(false);
-      setMap({ name: mapName });
+      const token = localStorage.getItem('token');
+      try {
+        console.log('Fetching map:', mapName); // Debugging log
+        const res = await getMap(mapName, token);
+        console.log('Fetched map:', res.data); // Debugging log
+        setMap(res.data);
+      } catch (err) {
+        console.error('Failed to fetch map:', err);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchMap();
@@ -28,6 +37,18 @@ const MapPage = () => {
   return (
     <div>
       <h1>{map.name}</h1>
+      <div className="map-container">
+        {map.semesters && map.semesters.map((semester, index) => (
+          <div key={semester.id} className="semester-column">
+            <h3>Semester {index + 1}</h3>
+            {semester.classes && semester.classes.map(classObj => (
+              <div key={classObj.id} className="class-card">
+                {classObj.name}
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
