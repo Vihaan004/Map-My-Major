@@ -4,6 +4,7 @@ import AuthPage from './components/Auth/AuthPage';
 import Home from './components/Home';
 import CreateMap from './components/Maps/CreateMap';
 import PrivateRoute from './components/PrivateRoute';
+import MapPage from './components/Maps/MapPage';
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
           <Route path="/auth" element={<AuthPage />} />
           <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
           <Route path="/create-map" element={<PrivateRoute><CreateMap /></PrivateRoute>} />
+          <Route path="/maps/:mapName" element={<PrivateRoute><MapPage /></PrivateRoute>} />
           <Route path="*" element={<Navigate to="/auth" />} />
         </Routes>
       </div>
