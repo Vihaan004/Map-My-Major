@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getMap } from '../../services/api';
+import { getMap, addSemester } from '../../services/api';
 import './MapPage.css';
 
 const MapPage = () => {
   const { mapName } = useParams();
   const [map, setMap] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [deleteMode, setDeleteMode] = useState(false);
 
   useEffect(() => {
     const fetchMap = async () => {
@@ -25,6 +26,19 @@ const MapPage = () => {
 
     fetchMap();
   }, [mapName]);
+
+  const handleAddSemester = async () => {
+    const token = localStorage.getItem('token');
+    try {
+      const res = await addSemester(map.id, token);
+      setMap(prevMap => ({
+        ...prevMap,
+        semesters: [...prevMap.semesters, res.data]
+      }));
+    } catch (err) {
+      console.error('Failed to add semester:', err);
+    }
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -49,6 +63,10 @@ const MapPage = () => {
           </div>
         ))}
       </div>
+      <button onClick={handleAddSemester}>Add New Semester</button>
+      <button onClick={() => setDeleteMode(!deleteMode)}>
+        {deleteMode ? 'Exit Delete Mode' : 'Delete Mode'}
+      </button>
     </div>
   );
 };
