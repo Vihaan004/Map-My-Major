@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Map My Major</title>
+<link rel="stylesheet" type="text/css" href="assets/styles.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="sidebar">
+        
+        <h1 class="title">Map My Major</h1>
+        <!-- Sidebar content -->
+    </div>
+
+    <div class="controls">
+
+    </div>
+
+
+    <div class="container">
+
+        <div class="map">
+
+            <!-- <div class="semester">
+                <div class="semester-head">
+                    <div class="sem-label-container">
+                        <h2 class="sem-label">Sem 1</h2>
+                        <img class="delete-semester" src="assets/images/delete.png" alt="delete">
+                    </div>
+                    <h3 class="sem-name">Fall 24</h3>
+                </div>
+                <div class="add-class-button">+</div>
+                <div class="semester-footer">
+                    <div class="footer-box">
+                        <div class="credit-hours-sum">0</div>
+                    </div>
+                </div>
+            </div> -->
+
+            <!-- SEMESTER COLUMNS ADDED HERE (BEFORE NEW-SEMESTER) -->
+            
+            <div class="new-semester" id="new-semester">
+                <div id="plus">+</div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Modal for class details -->
+    <div id="classModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>New Class Details</h2>
+            <form id="classForm">
+                <label for="className">Class Name: *</label>
+                <input type="text" id="className" name="className" required>
+                <label for="requirements">Requirements:</label>
+                <input type="text" id="requirements" name="requirements">
+                <label for="creditHours">Credit Hours: *</label>
+                <input type="number" id="creditHours" name="creditHours" required max="99">
+                <button type="submit" class="add-class-btn">Add Class</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="assets/script.js"></script>
+
+</body>
+</html>
