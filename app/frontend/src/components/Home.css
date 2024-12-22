@@ -1,0 +1,41 @@
+.map-grid {
+  margin: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.map-card {
+  border: 1px solid #ccc;
+  padding: 16px;
+  position: relative;
+}
+
+.map-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.map-rename {
+  width: 50%;
+  font-size: 1em;
+}
+
+.map-name {
+  margin: 0;
+  flex-grow: 1;
+  text-align: left;
+}
+
+.map-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.action-icon {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
