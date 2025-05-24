@@ -1,0 +1,736 @@
+/* App.css - styling for the major map planner */
+
+/* General styles */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #f9f9f9;
+}
+
+.App {
+  text-align: center;
+  padding: 2rem;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* App.css - basic layout for the major map planner */
+.MapPage {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.main-content {
+  flex: 3; /* Give more space to main content */
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow-y: auto; /* Enable vertical scrolling for the entire content */
+  overflow-x: auto; /* Enable horizontal scrolling if needed */
+  padding: 1rem;
+}
+
+.sidebar {
+  flex: 1; /* Adjust the sidebar to take proportional space */
+  max-width: 350px; /* Limit max width */
+  background: #f0f0f0;
+  padding: 1rem;
+  overflow-y: auto;
+  border-left: 1px solid #ddd;
+}
+
+/* Controls bar */
+.controls {
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Semesters grid */
+.semesters-grid {
+  display: flex;
+  flex-wrap: nowrap; /* Prevent semesters from wrapping to new lines */
+  padding-bottom: 20px;
+  margin-bottom: 2rem;
+  gap: 0;
+  width: max-content; /* Allow container to grow beyond viewport width */
+  overflow: visible; /* Allow content to extend beyond container */
+}
+
+.semester {
+  min-width: 220px; /* Slightly smaller minimum width */
+  width: 220px; /* Fixed width for each semester */
+  flex: 0 0 auto; /* Don't allow columns to grow or shrink */
+  padding: 0.5rem 0.3rem 1rem 0.3rem; /* Added padding at bottom since we removed the footer */
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: 100%; /* Fill the available height */
+}
+
+.semester-header {
+  background: #e0e0e0;
+  padding: 0.5rem;
+  text-align: center;
+  border-bottom: 1px solid #999;
+  margin-bottom: 0.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+}
+
+.semester-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.3rem;
+}
+
+.semester-number {
+  font-size: 0.7rem;
+  background: #999;
+  color: white;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.semester-name {
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin: 0;
+  flex-grow: 1;
+  text-align: center;
+  padding: 0.2rem 0.5rem;
+  cursor: pointer;
+  border: 1px dashed transparent;
+  border-radius: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.semester-name:hover {
+  border-color: #999;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+input.semester-name {
+  background-color: white;
+  cursor: text;
+  border: 1px solid #3f51b5;
+  outline: none;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.semester-credits {
+  font-size: 0.8rem;
+  font-weight: bold;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  text-align: center;
+  margin-top: 0.2rem;
+}
+
+/* Removing the semester-footer since we're moving credits to the header */
+
+/* Class card */
+.class-card {
+  background: #4caf50; /* Default green color for basic courses as in the image */
+  color: black;
+  border: 1px dashed #000;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  position: relative;
+  width: 100%;
+  height: 70px; /* Smaller fixed height */
+  min-height: 70px; /* Ensure minimum height is respected */
+  max-height: 70px; /* Enforce maximum height */
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Hide any overflowing content */
+}
+
+.class-card.elective {
+  background: #90caf9; /* Blue for electives */
+  border: 1px dashed #1565c0;
+}
+
+.class-card.advanced {
+  background: #ffc107; /* Yellow/orange for advanced/upper division courses */
+  border: 1px dashed #ff6f00;
+}
+
+.class-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  opacity: 0.95;
+  z-index: 10; /* Ensure it appears above other cards when hovering */
+  height: 70px; /* Maintain fixed height even on hover */
+}
+
+.class-card:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  height: 70px; /* Maintain fixed height even on active state */
+}
+
+.class-card h4 {
+  margin: 0 0 0.25rem;
+  font-size: 0.95rem;
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 85%; /* Prevent overlap with credits */
+  margin-bottom: auto;
+}
+
+.class-card p {
+  margin: 0.15rem 0;
+  font-size: 0.8rem;
+  flex-grow: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+.class-card .req-tags {
+  font-size: 0.7rem;
+  font-style: italic;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 85%;
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+}
+
+.class-card .credits {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.class-card select {
+  width: 100%;
+  padding: 0.3rem;
+  margin-top: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+/* Maps list */
+.maps-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.maps-list li {
+  list-style: none;
+}
+
+.map-link {
+  display: inline-block;
+  min-width: 200px;
+  padding: 1rem;
+  background: #3f51b5;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: bold;
+  text-align: center;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.map-link:hover {
+  background: #303f9f;
+  transform: translateY(-2px);
+}
+
+.map-link:active {
+  transform: translateY(0);
+}
+
+/* Requirements section */
+.requirements-section {
+  background: #e3f2fd;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 2rem auto;
+  max-width: 800px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.requirements-section h3 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.requirements-section ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.requirements-section li {
+  background: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Requirements tracking in sidebar */
+.requirements-section {
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  box-shadow: none;
+  max-width: none;
+}
+
+.requirements-section h3 {
+  background: #e0e0e0;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #999;
+  text-align: center;
+}
+
+.requirement-box {
+  background: #e0e0e0;
+  border: 1px solid #999;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+}
+
+.requirement-box h4 {
+  text-align: center;
+  margin: 0 0 0.5rem 0;
+  font-size: 0.9rem;
+  font-weight: normal;
+  border-bottom: 1px dashed #999;
+  padding-bottom: 0.3rem;
+}
+
+.requirement-stat {
+  display: flex;
+  justify-content: space-between;
+  background: #f9f9f9;
+  padding: 0.3rem;
+  border: 1px solid #ccc;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.requirement-stat-left {
+  flex: 2;
+  text-align: left;
+  font-weight: bold;
+}
+
+.requirement-stat-right {
+  flex: 1;
+  text-align: center;
+  background: #f0f0f0;
+  border-left: 1px solid #ccc;
+}
+
+.requirement-stat:last-child {
+  margin-bottom: 0;
+}
+
+.credits-total {
+  font-weight: bold;
+}
+
+/* Forms */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  animation: slideIn 0.2s ease-out;
+}
+
+@keyframes slideIn {
+  from { transform: translateY(-30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.form-group label {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.form-group input,
+.form-group select {
+  padding: 0.6rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.form-group select[multiple] {
+  height: 100px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.button-group button:last-child {
+  background: #e74c3c;
+}
+
+.button-group button:last-child:hover {
+  background: #c0392b;
+}
+
+/* Additional styles for header, credit counts and map summary */
+
+.map-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: white;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  width: 100%;
+  position: sticky;
+  top: 0;
+}
+
+.map-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.edit-name-button {
+  background: transparent;
+  color: #3498db;
+  font-size: 0.9rem;
+  padding: 0.3rem 0.6rem;
+  margin-left: 1rem;
+}
+
+.map-summary {
+  background: #f5f5f5;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.semester-credits {
+  background: #ebf5fb;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  margin-top: -0.5rem;
+  margin-bottom: 0.8rem;
+  display: inline-block;
+}
+
+.back-button {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: #34495e;
+}
+
+.back-button:hover {
+  background: #2c3e50;
+}
+
+/* Overrides for better UI matching the image */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.MapPage {
+  padding: 0;
+  overflow: hidden;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow-y: auto; /* Enable vertical scrolling */
+  overflow-x: auto; /* Enable horizontal scrolling */
+}
+
+.map-header {
+  padding: 1rem;
+  background: white;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.semesters-grid::-webkit-scrollbar {
+  height: 8px;
+}
+
+.semesters-grid::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.semesters-grid::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.semesters-grid::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.controls {
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+button {
+  background: #3f51b5;
+  font-size: 0.9rem;
+  padding: 0.4rem 0.8rem;
+}
+
+.semester button {
+  width: 100%;
+  margin: 0.5rem 0 0 0;
+  font-size: 0.8rem;
+  padding: 0.3rem;
+}
+
+/* Custom scrollbars for class lists */
+.class-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.class-list::-webkit-scrollbar-track {
+  background: #f5f5f5;
+  border-radius: 3px;
+}
+
+.class-list::-webkit-scrollbar-thumb {
+  background: #c0c0c0;
+  border-radius: 3px;
+}
+
+.class-list::-webkit-scrollbar-thumb:hover {
+  background: #a0a0a0;
+}
+
+/* Class context menu */
+.class-context-menu {
+  position: absolute;
+  top: 0;
+  right: -150px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  z-index: 100;
+  width: 150px;
+  padding: 0.5rem 0;
+  animation: fadeIn 0.1s ease-out;
+}
+
+.menu-title {
+  font-weight: bold;
+  padding: 0.3rem 0.8rem;
+  border-bottom: 1px solid #eee;
+  font-size: 0.9rem;
+  margin-bottom: 0.3rem;
+}
+
+.menu-item {
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.1s;
+}
+
+.menu-item:hover {
+  background: #f0f0f0;
+}
+
+.menu-divider {
+  height: 1px;
+  background: #ddd;
+  margin: 0.3rem 0;
+}
+
+.delete-item {
+  color: #e74c3c;
+}
+
+.delete-item:hover {
+  background: #ffebee;
+}
+
+/* Add a fancy tooltip */
+[title] {
+  position: relative;
+}
+
+[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  font-size: 0.75rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  white-space: nowrap;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  animation: fadeIn 0.2s forwards;
+  animation-delay: 0.5s;
+}
+
+/* Class list container - Added for consistent styling */
+.class-list {
+  flex: 1;
+  overflow-y: auto; /* Enable vertical scrolling within each class list */
+  padding-right: 4px; /* Add space for scrollbar */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Add class button - Added for consistent styling */
+.add-class-button {
+  width: 40px;
+  height: 40px;
+  margin: 0.5rem auto;
+  font-size: 1.2rem;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  flex-shrink: 0; /* Prevent the button from shrinking */
+}
