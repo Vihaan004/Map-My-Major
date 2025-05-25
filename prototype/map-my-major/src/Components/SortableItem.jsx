@@ -13,7 +13,14 @@ function SortableItem(props) {
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <ClassBox {...props} />
+      <ClassBox 
+        {...props} 
+        onClick={(e) => {
+          if (props.onClick) {
+            props.onClick(e);
+          }
+        }}
+      />
     </div>
   );
 }
