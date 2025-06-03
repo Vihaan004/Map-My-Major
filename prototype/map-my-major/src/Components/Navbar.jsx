@@ -14,7 +14,6 @@ function Navbar({ totalCredits, requirements, setRequirements, calculateRequirem
     type: 'credits',
     goal: ''
   });
-
   const handleSubmit = (e) => {
     e.preventDefault();
     
@@ -33,7 +32,7 @@ function Navbar({ totalCredits, requirements, setRequirements, calculateRequirem
     
     // Add the new requirement
     const requirementWithId = { ...newRequirement, id: Date.now() };
-    setRequirements([...requirements, requirementWithId]);
+    setRequirements([...requirements, requirementWithId], null); // null means no tag was deleted
     
     // Reset the form
     setNewRequirement({
@@ -44,21 +43,27 @@ function Navbar({ totalCredits, requirements, setRequirements, calculateRequirem
     });
     
     setShowModal(false);
+  };const deleteRequirement = (id) => {
+    // Find the tag of the requirement to be deleted
+    const reqToDelete = requirements.find(req => req.id === id);
+    if (reqToDelete) {
+      // Pass both the filtered requirements and the deleted tag
+      const updatedRequirements = requirements.filter(req => req.id !== id);
+      setRequirements(updatedRequirements, reqToDelete.tag);
+    } else {
+      setRequirements(requirements.filter(req => req.id !== id));
+    }
   };
-  const deleteRequirement = (id) => {
-    setRequirements(requirements.filter(req => req.id !== id));
-  };
-    const handleGoalChange = (id, newGoal) => {
+  const handleGoalChange = (id, newGoal) => {
     // Remove non-numeric characters and validate
     const numericGoal = newGoal.replace(/\D/g, '');
     
     // Only update if there's a valid numeric goal or it's empty
     if (numericGoal !== '' || newGoal === '') {
-      setRequirements(
-        requirements.map(req => 
-          req.id === id ? { ...req, goal: numericGoal } : req
-        )
+      const updatedRequirements = requirements.map(req => 
+        req.id === id ? { ...req, goal: numericGoal } : req
       );
+      setRequirements(updatedRequirements, null); // null means no tag was deleted
     }
   };
     const handleTotalGoalChange = (newGoal) => {
@@ -86,7 +91,7 @@ function Navbar({ totalCredits, requirements, setRequirements, calculateRequirem
               readOnly
               value={totalCredits}
             />
-            <span className="separator">/</span>
+            <span className="separator">of</span>
             <input
               type="text"
               className="goal-box"
@@ -118,7 +123,7 @@ function Navbar({ totalCredits, requirements, setRequirements, calculateRequirem
                   readOnly
                   value={progress.current}
                 />
-                <span className="separator">/</span>
+                <span className="separator">of</span>
                 <input
                   type="text"
                   className="goal-box"

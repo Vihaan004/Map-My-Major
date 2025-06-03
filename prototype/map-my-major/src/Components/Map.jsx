@@ -18,10 +18,46 @@ function Map({ numSemesters, setTotalCredits, requirements, setSemesters }) {
   useEffect(() => {
     initializeSemesters(numSemesters); // Initialize the semesters based on the given number
   }, [numSemesters]);
-
   useEffect(() => {
     calculateTotalCredits(); // Recalculate total credits whenever semesters change
-  }, [localSemesters]);  
+  }, [localSemesters]);
+  
+  // Ensure classes have valid requirement tags whenever requirements change
+  useEffect(() => {
+    if (requirements && localSemesters.length > 0) {
+      let hasChanges = false;
+      const updatedSemesters = localSemesters.map(semester => {
+        const updatedClasses = semester.classes.map(classItem => {
+          if (!classItem.requirementTags) return classItem;
+          
+          // Filter to only tags that exist in current requirements
+          const validTags = classItem.requirementTags.filter(tag => 
+            requirements.some(req => req.tag === tag)
+          );
+          
+          // If there's a change, update the class
+          if (JSON.stringify(validTags) !== JSON.stringify(classItem.requirementTags)) {
+            hasChanges = true;
+            return {
+              ...classItem,
+              requirementTags: validTags
+            };
+          }
+          return classItem;
+        });
+        
+        return {
+          ...semester,
+          classes: updatedClasses
+        };
+      });
+      
+      // Only update if there were actually changes
+      if (hasChanges) {
+        setLocalSemesters(updatedSemesters);
+      }
+    }
+  }, [requirements]);
   
   const initializeSemesters = (numSemesters) => {
     const initialSemesters = [];
