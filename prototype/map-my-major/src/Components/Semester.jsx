@@ -12,12 +12,36 @@ function Semester({ index, semester, removeSemester, addClass, deleteClass, dele
   const [creditError, setCreditError] = useState('');
   const [editingClassIndex, setEditingClassIndex] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-
   useEffect(() => {
     const total = semester.classes.reduce((sum, classItem) => sum + parseInt(classItem.creditHours, 10), 0);
     setTotalCreditHours(total);
   }, [semester.classes]);
-
+  
+  // Effect to check and update classes with stale requirement tags whenever requirements or classes change
+  useEffect(() => {
+    let hasUpdates = false;
+    
+    // Check each class for stale requirement tags
+    semester.classes.forEach((classItem, classIndex) => {
+      if (!classItem.requirementTags) return;
+      
+      // Get valid tags that still exist in requirements
+      const validTags = classItem.requirementTags.filter(tag => 
+        requirements.some(req => req.tag === tag)
+      );
+      
+      // If valid tags differ from stored tags, update the class
+      if (JSON.stringify(validTags) !== JSON.stringify(classItem.requirementTags)) {
+        hasUpdates = true;
+        const updatedClass = {
+          ...classItem,
+          requirementTags: validTags
+        };
+        editClass(semester.id, classIndex, updatedClass);
+      }
+    });
+    
+  }, [requirements, semester.classes, semester.id, editClass]);
   const handleSubmit = (e) => {
     e.preventDefault();
     if (creditHours < 1 || creditHours > 12) {
@@ -25,9 +49,14 @@ function Semester({ index, semester, removeSemester, addClass, deleteClass, dele
       return;
     }
     
+    // Filter tags to only include those that still exist in requirements
+    const validTags = selectedRequirementTags.filter(tag => 
+      requirements.some(req => req.tag === tag)
+    );
+    
     const classData = { 
       className, 
-      requirementTags: selectedRequirementTags, 
+      requirementTags: validTags, 
       creditHours 
     };
 
@@ -56,13 +85,18 @@ function Semester({ index, semester, removeSemester, addClass, deleteClass, dele
       setSelectedRequirementTags([...selectedRequirementTags, tag]);
     }
   };
-
   const handleEditClass = (classIndex, classData) => {
     setIsEditing(true);
     setEditingClassIndex(classIndex);
     setClassName(classData.className);
     setCreditHours(classData.creditHours);
-    setSelectedRequirementTags(classData.requirementTags || []);
+    
+    // Filter tags to only include those that still exist in requirements
+    const validTags = (classData.requirementTags || []).filter(tag => 
+      requirements.some(req => req.tag === tag)
+    );
+    setSelectedRequirementTags(validTags);
+    
     setShowModal(true);
   };
 
@@ -84,21 +118,27 @@ function Semester({ index, semester, removeSemester, addClass, deleteClass, dele
         <div className="credit-box">
           <div className="credit-hours-sum">{totalCreditHours}</div>
         </div>
-      </div>
-      {semester.classes.map((classItem, classIndex) => (
-        <Class
-          key={classIndex}
-          id={classIndex}
-          className={classItem.className}
-          requirements={classItem.requirementTags ? classItem.requirementTags.join(', ') : ''}
-          creditHours={classItem.creditHours}
-          requirementTags={classItem.requirementTags}
-          deleteMode={deleteMode}
-          onClick={() => deleteMode && deleteClass(semester.id, classIndex)}
-          onEdit={() => handleEditClass(classIndex, classItem)}
-          onDelete={() => deleteClass(semester.id, classIndex)}
-        />
-      ))}
+      </div>      {semester.classes.map((classItem, classIndex) => {
+        // Filter requirement tags to only include those that still exist in requirements
+        const validTags = (classItem.requirementTags || []).filter(tag => 
+          requirements.some(req => req.tag === tag)
+        );
+        
+        return (
+          <Class
+            key={classIndex}
+            id={classIndex}
+            className={classItem.className}
+            requirements={validTags.length > 0 ? validTags.join(', ') : ''}
+            creditHours={classItem.creditHours}
+            requirementTags={validTags}
+            deleteMode={deleteMode}
+            onClick={() => deleteMode && deleteClass(semester.id, classIndex)}
+            onEdit={() => handleEditClass(classIndex, classItem)}
+            onDelete={() => deleteClass(semester.id, classIndex)}
+          />
+        );
+      })}
       <div className="add-class-button" onClick={() => {
         setIsEditing(false);
         setEditingClassIndex(null);
