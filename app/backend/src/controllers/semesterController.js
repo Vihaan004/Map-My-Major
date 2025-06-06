@@ -1,8 +1,8 @@
-const { Semester } = require('../models');
+const { Semester, Class } = require('../models');
 
 exports.createSemester = async (req, res) => {
   try {
-    const semester = await Semester.create({ index: req.body.index, mapId: req.body.mapId });
+    const semester = await Semester.create({ index: req.body.index, mapId: req.body.mapId, name: req.body.name || 'New Sem' });
     res.status(201).json(semester);
   } catch (error) {
     res.status(500).json({ error: 'Failed to create semester' });
@@ -11,10 +11,23 @@ exports.createSemester = async (req, res) => {
 
 exports.getSemesters = async (req, res) => {
   try {
-    const semesters = await Semester.findAll({ where: { mapId: req.params.mapId } });
+    const semesters = await Semester.findAll({ 
+      where: { mapId: req.params.mapId },
+      include: [
+        {
+          model: Class,
+          as: 'classes'
+        }
+      ],
+      order: [
+        ['index', 'ASC'],
+        [{ model: Class, as: 'classes' }, 'id', 'ASC']
+      ]
+    });
     res.status(200).json(semesters);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to retrieve semesters' });
+    console.error('Error retrieving semesters:', error);
+    res.status(500).json({ error: 'Failed to retrieve semesters', details: error.message });
   }
 };
 
@@ -24,11 +37,13 @@ exports.updateSemester = async (req, res) => {
     if (!semester) {
       return res.status(404).json({ error: 'Semester not found' });
     }
-    semester.index = req.body.index;
+    semester.index = req.body.index !== undefined ? req.body.index : semester.index;
+    semester.name = req.body.name || semester.name;
     await semester.save();
     res.status(200).json(semester);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to update semester' });
+    console.error('Error updating semester:', error);
+    res.status(500).json({ error: 'Failed to update semester', details: error.message });
   }
 };
 

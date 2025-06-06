@@ -1,0 +1,260 @@
+.Navbar {
+  width: 225px;
+  height: 100vh;
+  background-color: darkgreen;
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 1000;
+  padding-top: 20px;
+  padding-bottom: 100px; /* Add padding at the bottom to make space for the navigation buttons */
+  box-sizing: border-box;
+}
+
+.title {
+  font-size: 1.5rem;
+  text-align: center;
+  margin: 0;
+  padding-bottom: 20px;
+}
+
+.requirements-container {
+  font-size: 1rem;
+  font-weight: 300;
+  text-align: center;
+  padding: 10px 0;
+  border-top: 1px dashed white;
+  border-bottom: 1px dashed white;
+  margin: 0 auto;
+  max-height: calc(100vh - 180px); /* Adjust height to prevent overflow with navigation buttons */
+  overflow-y: auto;
+}
+
+.requirements-title {
+  margin-bottom: 15px;
+  font-weight: 400;
+}
+
+.requirement-item {
+  display: flex;
+  flex-direction: column;
+  margin: 0 10px 15px 10px;
+}
+
+.requirement-label-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+.requirement-label {
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 400;
+}
+
+.requirement-box-container {
+  display: flex;
+  /* align-items: center; */
+  justify-content: center;
+  width: 100%;
+}
+
+.delete-req {
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 16px;
+  font-weight: bold;
+  display: inline-block;
+}
+
+.delete-req:hover {
+  color: white;
+}
+
+.current-box,
+.goal-box {
+  width: 40px;
+  height: 20px;
+  background-color: white;
+  border: 1px solid white;
+  text-align: center;
+  border-radius: 3px;
+}
+
+.current-box {
+  background-color: darkgreen;
+  color: white;
+  margin-right: 2px;
+}
+
+.goal-box {
+  margin-left: 2px;
+}
+
+.separator {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 20px;
+}
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.goal-box {
+  cursor: text;
+}
+
+.add-requirement-button {
+  font-size: 1rem;
+  cursor: pointer;
+  color: white;
+  background-color: darkgreen;
+  border: 1px solid white;
+  border-radius: 5px;
+  width: 75%;
+  height: 20px;
+  margin: 20px auto 10px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-requirement-button:hover {
+  background-color: white;
+  color: darkgreen;
+}
+
+.add-req-modal {
+  display: flex;
+  position: fixed;
+  z-index: 2000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+  justify-content: center;
+  align-items: center;
+}
+
+.add-req-modal-content {
+  background-color: #fefefe;
+  color: black;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  min-height: 330px;
+  max-height: 80vh;
+  max-width: 400px; 
+  border-radius: 5px;
+  text-align: left;
+  font-size: 1rem;
+  overflow-y: auto;
+}
+
+.add-req-modal-content h2 {
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+input[type="number"],
+input[type="text"],
+select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+.add-requirement-btn {
+  background-color: darkgreen;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin-top: 10px;
+  cursor: pointer;
+  float: right;
+}
+
+.add-requirement-btn:hover {
+  background-color: green;
+}
+
+.navbar-navigation {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  border-top: 1px dashed white;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.nav-btn {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid white;
+  border-radius: 5px;
+  padding: 10px 12px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 5px;
+}
+
+.nav-btn:hover {
+  background-color: white;
+  color: darkgreen;
+}
+
+.back-btn {
+  font-weight: 500;
+}
+
+.logout-btn {
+  background-color: rgba(255, 0, 0, 0.2);
+  margin-bottom: 10px;
+}

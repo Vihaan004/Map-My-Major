@@ -15,12 +15,6 @@ exports.register = async (req, res) => {
     const user = await User.create({ username, email, password: hashedPassword });
     const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-    // Create default map with 8 semesters
-    const map = await Map.create({ name: 'Map 0', userId: user.id });
-    for (let i = 1; i <= 8; i++) {
-      await Semester.create({ index: i, mapId: map.id });
-    }
-
     console.log(`-----USER REGISTERED: ${user.username} (${user.email})`);
 
     res.status(201).json({ token, userId: user.id });
@@ -39,12 +33,16 @@ exports.login = async (req, res) => {
       console.log('User not found'); // Log user not found
       return res.status(400).json({ error: 'Invalid email or password' });
     }
+    console.log('User found, comparing passwords...');
     const isPasswordValid = await bcrypt.compare(password, user.password);
+    console.log('Password comparison result:', isPasswordValid);
     if (!isPasswordValid) {
       console.log('Invalid password'); // Log invalid password
       return res.status(400).json({ error: 'Invalid email or password' });
     }
+    console.log('Login successful, generating token...');
     const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    console.log('Sending successful login response');
     res.status(200).json({ token, userId: user.id });
   } catch (error) {
     console.error('Error in login endpoint:', error); // Log the error

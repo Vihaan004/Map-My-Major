@@ -1,8 +1,7 @@
 import axios from 'axios';
 
-// const API_URL = 'http://localhost:5000/api'; // local dev
-
-const API_URL = process.env.REACT_APP_API_URL;
+// Set the API URL based on environment
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 const register = async (userData) => {
   return axios.post(`${API_URL}/users/register`, userData);
@@ -52,8 +51,8 @@ const deleteMap = async (mapId, token) => {
   });
 };
 
-const getMap = async (mapName, token) => {
-  return axios.get(`${API_URL}/maps/${mapName}`, {
+const getMap = async (mapId, token) => {
+  return axios.get(`${API_URL}/maps/id/${mapId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -68,8 +67,16 @@ const addSemester = (mapId, token) => {
   });
 };
 
-const addClass = async (semesterId, name, token) => {
-  return axios.post(`${API_URL}/semesters/${semesterId}/classes`, { name }, {
+const addClass = async (semesterId, classData, token) => {
+  return axios.post(`${API_URL}/semesters/${semesterId}/classes`, classData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+const updateClass = async (classId, classData, token) => {
+  return axios.put(`${API_URL}/classes/${classId}`, classData, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -92,4 +99,62 @@ const deleteClass = async (classId, token) => {
   });
 };
 
-export { register, login, createMap, getMaps, updateMap, deleteMap, getMap, addSemester, addClass, deleteSemester, deleteClass };
+const createRequirement = async (mapId, requirementData, token) => {
+  return axios.post(`${API_URL}/maps/${mapId}/requirements`, requirementData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+const getRequirements = async (mapId, token) => {
+  return axios.get(`${API_URL}/maps/${mapId}/requirements`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+const updateRequirement = async (requirementId, requirementData, token) => {
+  return axios.put(`${API_URL}/requirements/${requirementId}`, requirementData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+const deleteRequirement = async (requirementId, token) => {
+  return axios.delete(`${API_URL}/requirements/${requirementId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+const updateSemester = async (semesterId, semesterData, token) => {
+  return axios.put(`${API_URL}/semesters/${semesterId}`, semesterData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export { 
+  register, 
+  login, 
+  createMap, 
+  getMaps, 
+  updateMap, 
+  deleteMap, 
+  getMap, 
+  addSemester, 
+  addClass, 
+  updateClass,
+  deleteSemester, 
+  deleteClass,
+  createRequirement,
+  getRequirements,
+  updateRequirement,
+  deleteRequirement,
+  updateSemester
+};

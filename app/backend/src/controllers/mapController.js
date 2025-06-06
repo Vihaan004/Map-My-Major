@@ -1,4 +1,7 @@
 const { Map, Semester, Class } = require('../models');
+const { Op } = require('sequelize');
+const sequelize = require('../models').sequelize;
+const { updateRequirementProgress } = require('./requirementController');
 
 exports.createMap = async (req, res) => {
   try {
@@ -19,8 +22,7 @@ exports.createMap = async (req, res) => {
   }
 };
 
-exports.getMaps = async (req, res) => {
-  try {
+exports.getMaps = async (req, res) => {  try {
     const maps = await Map.findAll({
       where: { userId: req.userId },
       include: [
@@ -29,6 +31,9 @@ exports.getMaps = async (req, res) => {
           as: 'semesters',
           include: [{ model: Class, as: 'classes' }]
         }
+      ],
+      order: [
+        [{ model: Semester, as: 'semesters' }, 'index', 'ASC']
       ]
     });
     res.status(200).json(maps);
@@ -47,7 +52,10 @@ exports.getMapByName = async (req, res) => {
         model: Semester,
         as: 'semesters',
         include: [{ model: Class, as: 'classes' }]
-      }]
+      }],
+      order: [
+        [{ model: Semester, as: 'semesters' }, 'index', 'ASC']
+      ]
     });
     if (!map) {
       return res.status(404).json({ error: 'Map not found' });
@@ -55,6 +63,30 @@ exports.getMapByName = async (req, res) => {
     res.status(200).json(map);
   } catch (error) {
     console.error('Error in getMapByName endpoint:', error);
+    res.status(500).json({ error: 'Failed to retrieve map' });
+  }
+};
+
+exports.getMapById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const map = await Map.findOne({ 
+      where: { id, userId: req.userId },
+      include: [{
+        model: Semester,
+        as: 'semesters',
+        include: [{ model: Class, as: 'classes' }]
+      }],
+      order: [
+        [{ model: Semester, as: 'semesters' }, 'index', 'ASC']
+      ]
+    });
+    if (!map) {
+      return res.status(404).json({ error: 'Map not found' });
+    }
+    res.status(200).json(map);
+  } catch (error) {
+    console.error('Error in getMapById endpoint:', error);
     res.status(500).json({ error: 'Failed to retrieve map' });
   }
 };
@@ -99,13 +131,30 @@ exports.deleteMap = async (req, res) => {
 
 exports.addSemester = async (req, res) => {
   const { mapId } = req.params;
+  const { name } = req.body;
   try {
-    const map = await Map.findByPk(mapId);
+    // Validate map ownership
+    const map = await Map.findOne({ 
+      where: { 
+        id: mapId,
+        userId: req.userId 
+      }
+    });
+    
     if (!map) {
-      return res.status(404).json({ error: 'Map not found' });
+      return res.status(404).json({ error: 'Map not found or you do not have permission to access it' });
     }
+    
+    // Calculate the index for the new semester
     const index = await Semester.count({ where: { mapId } }) + 1;
-    const semester = await Semester.create({ mapId, index });
+    
+    // Create the new semester
+    const semester = await Semester.create({ 
+      mapId, 
+      index, 
+      name: name || 'New Sem' 
+    });
+    
     res.status(201).json(semester);
   } catch (error) {
     console.error('Error in addSemester endpoint:', error);
@@ -115,14 +164,28 @@ exports.addSemester = async (req, res) => {
 
 exports.addClass = async (req, res) => {
   const { semesterId } = req.params;
-  const { name } = req.body;
+  const { name, creditHours, credits, requirements, requirementTags, prerequisites, corequisites } = req.body;
   try {
     const semester = await Semester.findByPk(semesterId);
     if (!semester) {
       return res.status(404).json({ error: 'Semester not found' });
     }
     const classCount = await Class.count({ where: { semesterId } });
-    const classObj = await Class.create({ semesterId, name, position: classCount + 1 });
+    const classObj = await Class.create({ 
+      semesterId, 
+      name, 
+      creditHours: creditHours || credits || 3,
+      credits: credits || creditHours || 3,
+      requirements,
+      requirementTags: requirementTags || [],
+      prerequisites,
+      corequisites,
+      position: classCount + 1 
+    });
+    
+    // Update requirement progress for this map
+    await updateRequirementProgress(semester.mapId);
+    
     res.status(201).json(classObj);
   } catch (error) {
     console.error('Error in addClass endpoint:', error);
@@ -137,8 +200,25 @@ exports.deleteSemester = async (req, res) => {
     if (!semester) {
       return res.status(404).json({ error: 'Semester not found' });
     }
+    
+    const mapId = semester.mapId;
+    const deletedIndex = semester.index;
+    
+    // Delete the semester
     await semester.destroy();
-    res.status(200).json({ message: 'Semester deleted' });
+    
+    // Re-index all remaining semesters with index greater than the deleted one
+    await Semester.update(
+      { index: sequelize.literal('index - 1') },
+      { 
+        where: { 
+          mapId: mapId,
+          index: { [Op.gt]: deletedIndex }
+        }
+      }
+    );
+    
+    res.status(200).json({ message: 'Semester deleted and indices updated' });
   } catch (error) {
     console.error('Error in deleteSemester endpoint:', error);
     res.status(500).json({ error: 'Failed to delete semester' });
@@ -152,10 +232,74 @@ exports.deleteClass = async (req, res) => {
     if (!classObj) {
       return res.status(404).json({ error: 'Class not found' });
     }
+    
+    // Get the semester to find the mapId before deleting
+    const semester = await Semester.findByPk(classObj.semesterId);
+    
     await classObj.destroy();
+    
+    // Update requirement progress for this map
+    if (semester) {
+      await updateRequirementProgress(semester.mapId);
+    }
+    
     res.status(200).json({ message: 'Class deleted' });
   } catch (error) {
     console.error('Error in deleteClass endpoint:', error);
     res.status(500).json({ error: 'Failed to delete class' });
+  }
+};
+
+exports.updateClass = async (req, res) => {
+  const { classId } = req.params;
+  const { name, creditHours, credits, requirements, requirementTags, prerequisites, corequisites } = req.body;
+  try {
+    const classObj = await Class.findByPk(classId);
+    if (!classObj) {
+      return res.status(404).json({ error: 'Class not found' });
+    }
+    
+    // Get the semester to find the mapId
+    const semester = await Semester.findByPk(classObj.semesterId);
+    
+    await classObj.update({
+      name: name || classObj.name,
+      creditHours: creditHours || credits || classObj.creditHours,
+      credits: credits || creditHours || classObj.credits,
+      requirements: requirements !== undefined ? requirements : classObj.requirements,
+      requirementTags: requirementTags !== undefined ? requirementTags : classObj.requirementTags,
+      prerequisites: prerequisites !== undefined ? prerequisites : classObj.prerequisites,
+      corequisites: corequisites !== undefined ? corequisites : classObj.corequisites
+    });
+    
+    // Update requirement progress for this map
+    if (semester) {
+      await updateRequirementProgress(semester.mapId);
+    }
+    
+    res.status(200).json(classObj);
+  } catch (error) {
+    console.error('Error in updateClass endpoint:', error);
+    res.status(500).json({ error: 'Failed to update class' });
+  }
+};
+
+exports.updateSemester = async (req, res) => {
+  const { semesterId } = req.params;
+  const { name } = req.body;
+  try {
+    const semester = await Semester.findByPk(semesterId);
+    if (!semester) {
+      return res.status(404).json({ error: 'Semester not found' });
+    }
+    
+    await semester.update({
+      name: name !== undefined ? name : semester.name
+    });
+    
+    res.status(200).json(semester);
+  } catch (error) {
+    console.error('Error in updateSemester endpoint:', error);
+    res.status(500).json({ error: 'Failed to update semester' });
   }
 };
