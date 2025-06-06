@@ -116,6 +116,9 @@ exports.updateRequirement = async (req, res) => {
       color: color || requirement.color 
     });
     
+    // Update requirement progress for this map after updating requirement
+    await updateRequirementProgress(requirement.mapId);
+    
     console.log('Requirement updated:', requirement.toJSON());
     res.json(requirement);
   } catch (error) {

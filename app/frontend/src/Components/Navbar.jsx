@@ -177,20 +177,22 @@ function Navbar({ mapName, totalCredits, requirements, setRequirements, calculat
         {/* <div className="requirements-title">Your Requirements:</div>         */}        <div className="requirement-item">
           <div className="requirement-header">
             <div className="requirement-title">Total Credits</div>
-            <img 
-              className="requirement-edit-icon"
-              src="/images/edit-icon.svg"
-              alt="edit"
-              onClick={(e) => handleTotalCreditsEditClick(e)}
-            />
-            
-            {activeDropdown === 'total-credits' && (
-              <div className="total-credits-dropdown" ref={dropdownRef}>
-                <div className="dropdown-option" onClick={() => handleEditTotalCredits()}>
-                  Edit
+            <div className="requirement-edit-container">
+              <img 
+                className="requirement-edit-icon"
+                src="/images/edit-icon.svg"
+                alt="edit"
+                onClick={(e) => handleTotalCreditsEditClick(e)}
+              />
+              
+              {activeDropdown === 'total-credits' && (
+                <div className="total-credits-dropdown" ref={dropdownRef}>
+                  <div className="dropdown-option" onClick={() => handleEditTotalCredits()}>
+                    Edit
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
           <div className="requirement-progress-container">
             <div className="progress-box current-progress">
@@ -204,29 +206,30 @@ function Navbar({ mapName, totalCredits, requirements, setRequirements, calculat
         </div>
           {requirements.map((req) => {
           const progress = calculateRequirementProgress(req);
-          return (
-            <div key={req.id} className="requirement-item">
+          return (            <div key={req.id} className="requirement-item">
               <div className="requirement-header">
                 <div className="requirement-title" title={`${req.name} (${req.tag})`}>
                   {req.name}
                 </div>
-                <img 
-                  className="requirement-edit-icon"
-                  src="/images/edit-icon.svg"
-                  alt="edit"
-                  onClick={(e) => handleRequirementEditClick(req.id, e)}
-                />
-                
-                {activeDropdown === req.id && (
-                  <div className="requirement-dropdown" ref={dropdownRef}>
-                    <div className="dropdown-option" onClick={() => handleEditRequirement(req)}>
-                      Edit
+                <div className="requirement-edit-container">
+                  <img 
+                    className="requirement-edit-icon"
+                    src="/images/edit-icon.svg"
+                    alt="edit"
+                    onClick={(e) => handleRequirementEditClick(req.id, e)}
+                  />
+                  
+                  {activeDropdown === req.id && (
+                    <div className="requirement-dropdown" ref={dropdownRef}>
+                      <div className="dropdown-option" onClick={() => handleEditRequirement(req)}>
+                        Edit
+                      </div>
+                      <div className="dropdown-option" onClick={() => handleDeleteRequirement(req)}>
+                        Delete
+                      </div>
                     </div>
-                    <div className="dropdown-option" onClick={() => handleDeleteRequirement(req)}>
-                      Delete
-                    </div>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
               
               <div className="requirement-progress-container">

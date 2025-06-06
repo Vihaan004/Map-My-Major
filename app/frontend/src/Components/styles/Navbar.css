@@ -12,6 +12,7 @@
   padding-top: 20px;
   padding-bottom: 100px; /* Add padding at the bottom to make space for the navigation buttons */
   box-sizing: border-box;
+  margin-left: 15px;
 }
 
 .title {
