@@ -164,19 +164,15 @@ exports.addSemester = async (req, res) => {
 
 exports.addClass = async (req, res) => {
   const { semesterId } = req.params;
-  const { name, creditHours, credits, requirements, requirementTags, prerequisites, corequisites } = req.body;
+  const { name, creditHours, credits, requirementTags, prerequisites, corequisites } = req.body;
   try {
     const semester = await Semester.findByPk(semesterId);
     if (!semester) {
       return res.status(404).json({ error: 'Semester not found' });
     }
-    const classCount = await Class.count({ where: { semesterId } });
-    const classObj = await Class.create({ 
-      semesterId, 
-      name, 
+    const classCount = await Class.count({ where: { semesterId } });    const classObj = await Class.create({ 
+      semesterId,      name, 
       creditHours: creditHours || credits || 3,
-      credits: credits || creditHours || 3,
-      requirements,
       requirementTags: requirementTags || [],
       prerequisites,
       corequisites,
@@ -254,7 +250,7 @@ exports.deleteClass = async (req, res) => {
 
 exports.updateClass = async (req, res) => {
   const { classId } = req.params;
-  const { name, creditHours, credits, requirements, requirementTags, prerequisites, corequisites } = req.body;
+  const { name, creditHours, credits, requirementTags, prerequisites, corequisites } = req.body;
   try {
     const classObj = await Class.findByPk(classId);
     if (!classObj) {
@@ -263,12 +259,9 @@ exports.updateClass = async (req, res) => {
     
     // Get the semester to find the mapId
     const semester = await Semester.findByPk(classObj.semesterId);
-    
-    await classObj.update({
+      await classObj.update({
       name: name || classObj.name,
       creditHours: creditHours || credits || classObj.creditHours,
-      credits: credits || creditHours || classObj.credits,
-      requirements: requirements !== undefined ? requirements : classObj.requirements,
       requirementTags: requirementTags !== undefined ? requirementTags : classObj.requirementTags,
       prerequisites: prerequisites !== undefined ? prerequisites : classObj.prerequisites,
       corequisites: corequisites !== undefined ? corequisites : classObj.corequisites

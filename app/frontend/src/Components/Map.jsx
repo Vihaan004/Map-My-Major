@@ -178,16 +178,13 @@ function Map({ numSemesters, setNumSemesters, setTotalCredits, requirements, set
       if (!semester) {
         console.error('Semester not found for adding class');
         return;
-      }
-
-      // Prepare class data for API
+      }      // Prepare class data for API
       const classData = {
         name: newClass.className,
         creditHours: parseInt(newClass.creditHours, 10),
-        credits: parseInt(newClass.creditHours, 10),
         requirementTags: newClass.requirementTags || [],
         requirements: newClass.requirementTags ? newClass.requirementTags.join(', ') : ''
-      };      // Only attempt API call if we have a valid semester ID and auth token
+      };// Only attempt API call if we have a valid semester ID and auth token
       if (semester.id && typeof semester.id === 'number' && token) {
         try {
           const response = await apiAddClass(semester.id, classData, token);
@@ -244,13 +241,10 @@ function Map({ numSemesters, setNumSemesters, setTotalCredits, requirements, set
         return;
       }
 
-      const currentClass = semester.classes[classIndex];
-
-      // Prepare updated class data for API
+      const currentClass = semester.classes[classIndex];      // Prepare updated class data for API
       const classData = {
         name: updatedClass.className || currentClass.name,
         creditHours: parseInt(updatedClass.creditHours, 10) || currentClass.creditHours,
-        credits: parseInt(updatedClass.creditHours, 10) || currentClass.credits,
         requirementTags: updatedClass.requirementTags || currentClass.requirementTags || [],
         requirements: updatedClass.requirementTags ? updatedClass.requirementTags.join(', ') : (currentClass.requirements || '')
       };
