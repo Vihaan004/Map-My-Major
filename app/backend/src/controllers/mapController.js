@@ -206,8 +206,7 @@ exports.deleteSemester = async (req, res) => {
     
     // Delete the semester
     await semester.destroy();
-    
-    // Re-index all remaining semesters with index greater than the deleted one
+      // Re-index all remaining semesters with index greater than the deleted one
     await Semester.update(
       { index: sequelize.literal('index - 1') },
       { 
@@ -217,6 +216,9 @@ exports.deleteSemester = async (req, res) => {
         }
       }
     );
+    
+    // Update requirement progress for this map after semester deletion
+    await updateRequirementProgress(mapId);
     
     res.status(200).json({ message: 'Semester deleted and indices updated' });
   } catch (error) {
