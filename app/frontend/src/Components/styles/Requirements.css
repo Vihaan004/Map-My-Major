@@ -17,72 +17,85 @@
 }
 
 .requirement-item {
-  display: flex;
-  flex-direction: column;
+  background-color: #e5e5ff;
+  border: 1px solid rgb(77, 77, 77);
+  border-radius: 8px;
+  padding: 12px;
   margin: 0 10px 15px 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: #2F4F2F;
+  position: relative;
 }
 
-.requirement-label-container {
+.requirement-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
 }
 
-.requirement-label {
-  text-align: left;
+.requirement-title {
+  font-weight: 500;
+  font-size: 1rem;
+  color: rgb(77, 77, 77);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-weight: 400;
+  flex: 1;
 }
 
-.requirement-box-container {
-  display: flex;
-  /* align-items: center; */
-  justify-content: center;
-  width: 100%;
-}
-
-.delete-req {
+.requirement-edit-icon {
+  width: 16px;
+  height: 16px;
   cursor: pointer;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 16px;
-  font-weight: bold;
-  display: inline-block;
-}
-
-.delete-req:hover {
-  color: white;
-}
-
-.current-box,
-.goal-box {
-  width: 40px;
-  height: 20px;
-  background-color: white;
-  border: 1px solid white;
-  text-align: center;
   border-radius: 3px;
+  transition: all 0.2s ease;
+  opacity: 0.7;
+  padding: 2px;
+  flex-shrink: 0;
+  margin-left: 8px;
 }
 
-.current-box {
-  background-color: darkgreen;
-  color: white;
-  margin-right: 2px;
+.requirement-edit-icon:hover {
+  background-color: rgba(47, 79, 47, 0.1);
+  opacity: 1;
 }
 
-.goal-box {
-  margin-left: 2px;
-}
-
-.separator {
-  margin: 0;
+.requirement-progress-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 20px;
+  gap: 8px;
+}
+
+.progress-box {
+  width: 45px;
+  height: 24px;
+  text-align: center;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.current-progress {
+  background-color: white;
+  color: rgb(77, 77, 77);
+  border: 1px solid rgb(77, 77, 77);
+}
+
+.goal-progress {
+  background-color: rgb(77, 77, 77);
+  color: white;
+  border: 1px solid rgb(77, 77, 77);
+}
+
+.progress-separator {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #2F4F2F;
 }
 
 input[type=number]::-webkit-outer-spin-button,
@@ -101,23 +114,28 @@ input[type=number] {
 }
 
 .add-requirement-button {
+  background-color: #e5e5ff;
+  border: 1px solid rgb(77, 77, 77);
+  border-radius: 8px;
+  padding: 12px;
+  margin: 0 10px 15px 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: #2F4F2F;
   font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
-  color: white;
-  background-color: darkgreen;
-  border: 1px solid white;
-  border-radius: 5px;
-  width: 75%;
-  height: 20px;
-  margin: 20px auto 10px auto;
   display: flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
+  transition: all 0.2s ease;
+  min-height: 48px;
 }
 
 .add-requirement-button:hover {
-  background-color: white;
-  color: darkgreen;
+  background-color: #d9d9ff;
+  /* border-color: #6BBD6B; */
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
 }
 
 .add-req-modal {
@@ -236,4 +254,157 @@ select {
 /* Form group styling for adding/editing requirements */
 .form-group {
   margin-bottom: 15px;
+}
+
+/* Requirement dropdown styles */
+.requirement-dropdown {
+  position: absolute;
+  top: calc(100% + 5px);
+  right: 8px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  min-width: 100px;
+}
+
+.requirement-dropdown .dropdown-option {
+  padding: 8px 12px;
+  cursor: pointer;
+  text-align: left;
+  font-size: 0.85rem;
+  color: #333;
+}
+
+.requirement-dropdown .dropdown-option:hover {
+  background-color: #f0f0f0;
+}
+
+.requirement-dropdown .dropdown-option:first-child {
+  border-bottom: 1px solid #eee;
+}
+
+/* Edit requirement modal */
+.edit-req-modal {
+  display: flex;
+  position: fixed;
+  z-index: 2000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+  justify-content: center;
+  align-items: center;
+}
+
+.edit-req-modal-content {
+  background-color: #fefefe;
+  color: black;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  min-height: 330px;
+  max-height: 80vh;
+  max-width: 400px; 
+  border-radius: 5px;
+  text-align: left;
+  font-size: 1rem;
+  overflow-y: auto;
+}
+
+.edit-req-modal-content h2 {
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.edit-requirement-btn {
+  background-color: #2F4F2F;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin-top: 10px;
+  cursor: pointer;
+  float: right;
+  border-radius: 4px;
+}
+
+.edit-requirement-btn:hover {
+  background-color: #228B22;
+}
+
+/* Total credits edit dropdown styles */
+.total-credits-dropdown {
+  position: absolute;
+  top: calc(100% + 5px);
+  right: 8px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  min-width: 100px;
+}
+
+.total-credits-dropdown .dropdown-option {
+  padding: 8px 12px;
+  cursor: pointer;
+  text-align: left;
+  font-size: 0.85rem;
+  color: #333;
+}
+
+.total-credits-dropdown .dropdown-option:hover {
+  background-color: #f0f0f0;
+}
+
+/* Edit total credits modal */
+.edit-total-modal {
+  display: flex;
+  position: fixed;
+  z-index: 2000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+  justify-content: center;
+  align-items: center;
+}
+
+.edit-total-modal-content {
+  background-color: #fefefe;
+  color: black;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  min-height: 200px;
+  max-height: 80vh;
+  max-width: 350px; 
+  border-radius: 5px;
+  text-align: left;
+  font-size: 1rem;
+  overflow-y: auto;
+}
+
+.edit-total-modal-content h2 {
+  text-align: center;
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+.edit-total-btn {
+  background-color: #2F4F2F;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin-top: 10px;
+  cursor: pointer;
+  float: right;
+  border-radius: 4px;
+}
+
+.edit-total-btn:hover {
+  background-color: #228B22;
 }

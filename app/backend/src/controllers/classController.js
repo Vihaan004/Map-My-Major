@@ -13,13 +13,9 @@ exports.createClass = async (req, res) => {
     const semester = await Semester.findByPk(semesterId);
     if (!semester) {
       return res.status(404).json({ error: 'Semester not found' });
-    }
-
-    const classItem = await Class.create({ 
+    }    const classItem = await Class.create({ 
       name: req.body.name, 
-      creditHours: req.body.creditHours || req.body.credits, 
-      credits: req.body.credits || req.body.creditHours,
-      requirements: req.body.requirements, 
+      creditHours: req.body.creditHours || req.body.credits || 3, 
       requirementTags: req.body.requirementTags || [],
       prerequisites: req.body.prerequisites, 
       corequisites: req.body.corequisites, 
@@ -53,13 +49,9 @@ exports.updateClass = async (req, res) => {
     }
     
     // Get the semester to find the mapId
-    const semester = await Semester.findByPk(classItem.semesterId);
-    
-    // Update all fields, maintaining backward compatibility
+    const semester = await Semester.findByPk(classItem.semesterId);      // Update all fields, maintaining backward compatibility for credits input
     classItem.name = req.body.name || classItem.name;
     classItem.creditHours = req.body.creditHours || req.body.credits || classItem.creditHours;
-    classItem.credits = req.body.credits || req.body.creditHours || classItem.credits;
-    classItem.requirements = req.body.requirements || classItem.requirements;
     classItem.requirementTags = req.body.requirementTags || classItem.requirementTags;
     classItem.prerequisites = req.body.prerequisites || classItem.prerequisites;
     classItem.corequisites = req.body.corequisites || classItem.corequisites;

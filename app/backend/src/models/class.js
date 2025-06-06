@@ -3,20 +3,10 @@ module.exports = (sequelize, DataTypes) => {  const Class = sequelize.define('Cl
     name: {
       type: DataTypes.STRING,
       allowNull: false
-    },
-    creditHours: {
+    },    creditHours: {
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 3
-    },
-    credits: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: 3
-    },
-    requirements: {
-      type: DataTypes.TEXT,
-      allowNull: true
     },
     requirementTags: {
       type: DataTypes.JSON,
