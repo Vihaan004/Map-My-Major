@@ -89,7 +89,8 @@ function Navbar({ mapName, totalCredits, requirements, setRequirements, calculat
     <div className="Navbar">
       <h1 className="title">{mapName || "Map My Major"}</h1>
       <div className="requirements-container">
-        <div className="requirements-title">Requirements:</div>        <div className="requirement-item">
+        {/* <div className="requirements-title">Your Requirements:</div>         */}
+        <div className="requirement-item">
           <div className="requirement-label-container">
             <label className="requirement-label">Total</label>
           </div>          <div className="requirement-box-container">

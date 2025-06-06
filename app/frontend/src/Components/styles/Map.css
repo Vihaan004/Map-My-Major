@@ -1,9 +1,9 @@
 .map-container {
   display: flex;
   justify-content: flex-start;
-  width: calc(98% - 225px);
+  /* width: calc(98% - 300px); */
   height: auto;
-  margin-left: 240px;
+  margin-left: 315px;
   /* margin-top: 10px;  */
   /* position: absolute; */
   z-index: 1;
@@ -36,36 +36,7 @@
   font-size: 1.5rem;
 }
 
-.navigate-actions {
-  display: flex;
-  
-  justify-content: flex-end;
-  gap: 1rem;
-}
 
-.back-btn, .logout-btn {
-  background-color: #6c757d;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-  text-decoration: none;
-  font-size: 0.9rem;
-  transition: background-color 0.3s;
-}
-
-.back-btn:hover {
-  background-color: #5a6268;
-}
-
-.logout-btn {
-  background-color: #dc3545;
-}
-
-.logout-btn:hover {
-  background-color: #c82333;
-}
 
 .controls {
   display: flex;

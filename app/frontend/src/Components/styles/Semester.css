@@ -30,7 +30,7 @@
 }
 
 .sem-label-container {
-  font-size: 0.685rem;
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -46,45 +46,37 @@
 
 .sem-label {
   margin: 0;
-  font-size: 0.775rem;
+  font-size: 0.875rem;
+}
+
+/* Edit icon */
+.semester-edit-icon {
+  width: 14px;
+  height: 14px;
   cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.2s ease;
+  opacity: 0.6;
+  padding: 2px;
+}
+
+.semester-edit-icon:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  opacity: 1;
+}
+
+/* 
+.sem-label.clickable:hover {
+  background-color: rgba(255, 166, 0, 0.2);
+  border-radius: 3px;
+  padding: 2px 4px;
 }
 
 .sem-label.editable:hover {
   background-color: rgba(255, 166, 0, 0.2);
   border-radius: 3px;
   padding: 2px 4px;
-}
-
-.sem-label.delete-mode {
-  cursor: pointer;
-  color: red;
-}
-
-.sem-name-input {
-  font-size: 0.675rem;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  padding: 2px 4px;
-  text-align: center;
-  background-color: white;
-  width: 70px;
-  font-family: inherit;
-}
-
-.sem-name-input:focus {
-  outline: 2px solid #4CAF50;
-  border-color: #4CAF50;
-}
-
-.delete-semester {
-  cursor: pointer;
-  width: 12.6px;
-  height: 12.6px;
-  opacity: 30%;
-  display: inline-block;
-  vertical-align: middle;
-}
+} */
 
 .add-class-button {
   font-size: 0.9rem;
@@ -207,4 +199,33 @@ select {
 .error {
   color: red;
   font-size: 0.8rem;
+}
+
+/* Semester dropdown styles */
+.semester-dropdown {
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  min-width: 100px;
+}
+
+.semester-dropdown .dropdown-option {
+  padding: 8px 12px;
+  cursor: pointer;
+  text-align: left;
+  font-size: 0.85rem;
+}
+
+.semester-dropdown .dropdown-option:hover {
+  background-color: #f0f0f0;
+}
+
+.semester-dropdown .dropdown-option:first-child {
+  border-bottom: 1px solid #eee;
 }

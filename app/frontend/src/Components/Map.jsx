@@ -141,7 +141,7 @@ function Map({ numSemesters, setNumSemesters, setTotalCredits, requirements, set
     } else {
       alert('Maximum of 12 semesters reached.');
     }
-  };const removeSemester = async (id) => {
+  };  const removeSemester = async (id) => {
     try {
       // Find the semester to delete
       const semesterToDelete = localSemesters.find(sem => sem.id === id);
@@ -153,11 +153,21 @@ function Map({ numSemesters, setNumSemesters, setTotalCredits, requirements, set
       // Update local state - backend handles re-indexing automatically
       const updatedSemesters = localSemesters.filter((semester) => semester.id !== id);
       setLocalSemesters(updatedSemesters);
+      
+      // Refresh requirements to update progress
+      if (onRequirementsUpdate) {
+        onRequirementsUpdate();
+      }
     } catch (error) {
       console.error('Error removing semester:', error);
       // Still update local state even if API call fails
       const updatedSemesters = localSemesters.filter((semester) => semester.id !== id);
       setLocalSemesters(updatedSemesters);
+      
+      // Refresh requirements to update progress after fallback
+      if (onRequirementsUpdate) {
+        onRequirementsUpdate();
+      }
     }
   };
   

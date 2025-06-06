@@ -1,27 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import Class from './Class';
 import './styles/Semester.css';
 import './styles/Requirements.css';
 
-function Semester({ semester, removeSemester, updateSemester, addClass, deleteClass, deleteMode, requirements, editClass }) {
-  const [showModal, setShowModal] = useState(false);
+function Semester({ semester, removeSemester, updateSemester, addClass, deleteClass, deleteMode, requirements, editClass }) {  const [showModal, setShowModal] = useState(false);
   const [className, setClassName] = useState('');
   const [selectedRequirementTags, setSelectedRequirementTags] = useState([]);
   const [creditHours, setCreditHours] = useState('');
-  const [totalCreditHours, setTotalCreditHours] = useState(0);  const [isEditingName, setIsEditingName] = useState(false);
-  const [semesterName, setSemesterName] = useState(semester.name || 'New Sem');
+  const [totalCreditHours, setTotalCreditHours] = useState(0);
   const [creditError, setCreditError] = useState('');
   const [editingClassIndex, setEditingClassIndex] = useState(null);
-  const [isEditing, setIsEditing] = useState(false);  useEffect(() => {
+  const [isEditing, setIsEditing] = useState(false);
+  
+  // New state for semester dropdown and edit modal
+  const [showSemesterDropdown, setShowSemesterDropdown] = useState(false);
+  const [showSemesterEditModal, setShowSemesterEditModal] = useState(false);
+  const [editSemesterName, setEditSemesterName] = useState('');
+  const dropdownRef = useRef(null);  useEffect(() => {
     const total = semester.classes.reduce((sum, classItem) => sum + parseInt(classItem.creditHours, 10), 0);
     setTotalCreditHours(total);
   }, [semester.classes]);
-  
-  // Update semester name when semester prop changes
-  useEffect(() => {
-    setSemesterName(semester.name || 'New Sem');
-  }, [semester.name]);
   
   // Effect to check and update classes with stale requirement tags whenever requirements or classes change
   useEffect(() => {
@@ -44,10 +43,24 @@ function Semester({ semester, removeSemester, updateSemester, addClass, deleteCl
           requirementTags: validTags
         };
         editClass(semester.id, classIndex, updatedClass);
-      }
-    });
+      }    });
     
   }, [requirements, semester.classes, semester.id, editClass]);
+  
+  // Close semester dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowSemesterDropdown(false);
+      }
+    }
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     if (creditHours < 1 || creditHours > 12) {
@@ -99,74 +112,65 @@ function Semester({ semester, removeSemester, updateSemester, addClass, deleteCl
     // Filter tags to only include those that still exist in requirements
     const validTags = (classData.requirementTags || []).filter(tag => 
       requirements.some(req => req.tag === tag)
-    );
-    setSelectedRequirementTags(validTags);
+    );    setSelectedRequirementTags(validTags);
     setShowModal(true);
   };
 
-  const handleSemesterNameClick = () => {
-    if (!deleteMode) {
-      setIsEditingName(true);
-    }
+  // New handlers for semester dropdown interface
+  const handleSemesterHeaderClick = (e) => {
+    setShowSemesterDropdown(!showSemesterDropdown);
+    e.stopPropagation();
   };
-
-  const handleSemesterNameSave = async () => {
-    if (semesterName.trim() === '') {
-      setSemesterName(semester.name || 'New Sem');
-      setIsEditingName(false);
+  
+  const handleSemesterEditClick = (e) => {
+    setEditSemesterName(semester.name || 'New Sem');
+    setShowSemesterEditModal(true);
+    setShowSemesterDropdown(false);
+    e.stopPropagation();
+  };
+  
+  const handleSemesterDeleteClick = (e) => {
+    removeSemester(semester.id);
+    setShowSemesterDropdown(false);
+    e.stopPropagation();
+  };
+  
+  const handleSemesterEditSubmit = async (e) => {
+    e.preventDefault();
+    if (editSemesterName.trim() === '') {
+      setShowSemesterEditModal(false);
       return;
     }
 
     try {
-      await updateSemester(semester.id, { name: semesterName.trim() });
-      setIsEditingName(false);
+      await updateSemester(semester.id, { name: editSemesterName.trim() });
+      setShowSemesterEditModal(false);
     } catch (error) {
       console.error('Failed to update semester name:', error);
-      // Revert to original name on error
-      setSemesterName(semester.name || 'New Sem');
-      setIsEditingName(false);
+      setShowSemesterEditModal(false);
     }
   };
-
-  const handleSemesterNameCancel = () => {
-    setSemesterName(semester.name || 'New Sem');
-    setIsEditingName(false);
-  };
-  const handleSemesterNameKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      handleSemesterNameSave();
-    } else if (e.key === 'Escape') {
-      handleSemesterNameCancel();
-    }
-  };
-
   return (
-    <div className="semester">      <div className="semester-head">
-        <div className="sem-label-container">
-          {isEditingName ? (
-            <input
-              type="text"
-              className="sem-name-input"
-              value={semesterName}
-              onChange={(e) => setSemesterName(e.target.value)}
-              onBlur={handleSemesterNameSave}
-              onKeyDown={handleSemesterNameKeyPress}
-              autoFocus
-            />
-          ) : (
-            <h2
-              className={`sem-label ${deleteMode ? 'delete-mode' : 'editable'}`}
-              onClick={deleteMode ? () => removeSemester(semester.id) : handleSemesterNameClick}
-            >
-              {semester.name || 'New Sem'}
-            </h2>
-          )}
-          <img
-            className="delete-semester"
-            src="src/assets/images/delete.png"
-            alt="delete"
-            onClick={() => removeSemester(semester.id)}
+    <div className="semester">
+      <div className="semester-head">        <div className="sem-label-container">          <h2 className="sem-label">
+            {semester.name || 'New Sem'}
+          </h2>          <img 
+            className="semester-edit-icon"
+            src="/images/edit-icon.svg"
+            alt="edit"
+            onClick={handleSemesterHeaderClick}
           />
+          
+          {showSemesterDropdown && (
+            <div className="semester-dropdown" ref={dropdownRef}>
+              <div className="dropdown-option" onClick={handleSemesterEditClick}>
+                Edit
+              </div>
+              <div className="dropdown-option" onClick={handleSemesterDeleteClick}>
+                Delete
+              </div>
+            </div>
+          )}
         </div>
         <div className="credit-box">
           <div className="credit-hours-sum">{totalCreditHours}</div>
@@ -252,9 +256,33 @@ function Semester({ semester, removeSemester, updateSemester, addClass, deleteCl
                 {isEditing ? 'Save Changes' : 'Add Class'}
               </button>
             </form>
+          </div>        </div>,
+        document.body
+      )}
+      
+      {showSemesterEditModal && ReactDOM.createPortal(
+        <div className="add-class-modal">
+          <div className="add-class-modal-content">
+            <span className="close" onClick={() => setShowSemesterEditModal(false)}>&times;</span>
+            <h2>Edit Semester Name</h2>
+            <form onSubmit={handleSemesterEditSubmit}>
+              <label htmlFor="semesterName">Semester Name: *</label>
+              <input
+                type="text"
+                id="semesterName"
+                value={editSemesterName}
+                onChange={(e) => setEditSemesterName(e.target.value)}
+                required
+                autoFocus
+              />
+              <button type="submit" className="add-class-btn">
+                Save Changes
+              </button>
+            </form>
           </div>
         </div>,
-        document.body      )}
+        document.body
+      )}
     </div>
   );
 }

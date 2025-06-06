@@ -1,4 +1,5 @@
 const { Semester, Class } = require('../models');
+const { updateRequirementProgress } = require('./requirementController');
 
 exports.createSemester = async (req, res) => {
   try {
@@ -53,9 +54,18 @@ exports.deleteSemester = async (req, res) => {
     if (!semester) {
       return res.status(404).json({ error: 'Semester not found' });
     }
+    
+    // Store the mapId before deleting the semester
+    const mapId = semester.mapId;
+    
     await semester.destroy();
+    
+    // Update requirement progress for this map after deletion
+    await updateRequirementProgress(mapId);
+    
     res.status(200).json({ message: 'Semester deleted' });
   } catch (error) {
+    console.error('Error deleting semester:', error);
     res.status(500).json({ error: 'Failed to delete semester' });
   }
 };
