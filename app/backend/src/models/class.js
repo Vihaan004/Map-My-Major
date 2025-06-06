@@ -1,17 +1,27 @@
 'use strict';
-module.exports = (sequelize, DataTypes) => {
-  const Class = sequelize.define('Class', {
+module.exports = (sequelize, DataTypes) => {  const Class = sequelize.define('Class', {
     name: {
       type: DataTypes.STRING,
       allowNull: false
     },
+    creditHours: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 3
+    },
     credits: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      defaultValue: 3
     },
     requirements: {
       type: DataTypes.TEXT,
       allowNull: true
+    },
+    requirementTags: {
+      type: DataTypes.JSON,
+      allowNull: true,
+      defaultValue: []
     },
     prerequisites: {
       type: DataTypes.TEXT,

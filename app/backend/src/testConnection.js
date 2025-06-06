@@ -1,13 +1,26 @@
 const { Sequelize } = require('sequelize');
 require('dotenv').config();
 
-if (!process.env.DATABASE_URL) {
-  throw new Error('DATABASE_URL environment variable is not defined');
-}
+// Load the configuration based on environment
+const env = process.env.NODE_ENV || 'development';
+const config = require('./config/config.json')[env];
 
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
-  dialect: 'postgres'
-});
+let sequelize;
+if (config.use_env_variable && process.env[config.use_env_variable]) {
+  sequelize = new Sequelize(process.env[config.use_env_variable], {
+    dialect: 'postgres'
+  });
+} else {
+  sequelize = new Sequelize(
+    config.database,
+    config.username,
+    config.password,
+    {
+      host: config.host,
+      dialect: config.dialect
+    }
+  );
+}
 
 async function testConnection() {
   try {
@@ -19,5 +32,8 @@ async function testConnection() {
     await sequelize.close();
   }
 }
+
+// Execute the test function
+testConnection();
 
 testConnection();

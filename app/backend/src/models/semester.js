@@ -1,9 +1,13 @@
 'use strict';
-module.exports = (sequelize, DataTypes) => {
-  const Semester = sequelize.define('Semester', {
+module.exports = (sequelize, DataTypes) => {  const Semester = sequelize.define('Semester', {
     index: {
       type: DataTypes.INTEGER,
       allowNull: false
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: 'New Sem'
     }
   }, {});
   Semester.associate = function(models) {
