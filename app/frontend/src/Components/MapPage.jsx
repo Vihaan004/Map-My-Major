@@ -86,15 +86,11 @@ const MapPage = () => {
       
       console.log('API results:', apiResults);
       
-      // If we created new requirements, fetch all requirements again to get the assigned IDs
-      if (newReqs.length > 0) {
-        console.log('Fetching updated requirements from server');
-        const refreshedRequirements = await getRequirements(mapId, token);
-        console.log('Refreshed requirements:', refreshedRequirements.data);
-        setRequirements(refreshedRequirements.data);
-      } else {
-        setRequirements(newRequirements);
-      }
+      // Always fetch fresh requirements from server to get updated progress values
+      console.log('Fetching updated requirements from server');
+      const refreshedRequirements = await getRequirements(mapId, token);
+      console.log('Refreshed requirements:', refreshedRequirements.data);
+      setRequirements(refreshedRequirements.data);
       
       // Handle tag deletion from classes (same logic as before)
       if (deletedTag && semesters.length > 0) {
@@ -126,7 +122,7 @@ const MapPage = () => {
       setError('Failed to update requirements');
       console.error('Error updating requirements:', error);
     }
-  };  const calculateRequirementProgress = (requirement) => {
+  };const calculateRequirementProgress = (requirement) => {
     // Use the current value from the backend instead of calculating locally
     return { 
       current: requirement.current || 0, 
