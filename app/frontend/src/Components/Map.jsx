@@ -434,7 +434,8 @@ function Map({ numSemesters, setNumSemesters, setTotalCredits, requirements, set
           className={`new-semester ${isAddingSemester ? 'loading' : ''}`} 
           onClick={isAddingSemester ? null : addSemester}
         >
-          <div id="plus">{isAddingSemester ? '...' : '+'}</div>
+          {/* <div id="plus">{isAddingSemester ? '...' : '+ Add a Semester'}</div> */}
+          + Semester
         </div>
       </div>
     </div>
