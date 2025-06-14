@@ -6,7 +6,6 @@
   .classbox {
     height: 50px;
     width: 80px;
-    background-color: orange;
     border: 1px solid black;
     margin: 13.5px;
     display: flex;
@@ -61,7 +60,7 @@
     border-radius: 4px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     z-index: 1000;
-    min-width: 100px;
+    min-width: 120px;
   }
 
   .dropdown-option {
@@ -69,12 +68,56 @@
     cursor: pointer;
     text-align: left;
     font-size: 0.85rem;
+    border-bottom: 1px solid #eee;
   }
 
   .dropdown-option:hover {
     background-color: #f0f0f0;
   }
 
-  .dropdown-option:first-child {
-    border-bottom: 1px solid #eee;
+  .dropdown-option:last-child {
+    border-bottom: none;
+  }
+
+  /* Class status styles */
+  .classbox.planned {
+    background-color: orange;
+  }
+
+  .classbox.in-progress {
+    background-color: #4d9de0; /* Blue */
+  }
+
+  .classbox.complete {
+    background-color: #56c271; /* Green */
+  }
+  
+  /* Status dot indicators in dropdown */
+  .status-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  
+  .status-dot.planned {
+    background-color: orange;
+  }
+  
+  .status-dot.in-progress {
+    background-color: #4d9de0; /* Blue */
+  }
+  
+  .status-dot.complete {
+    background-color: #56c271; /* Green */
+  }
+
+  /* Dropdown icon styles */
+  .dropdown-icon {
+    width: 15px;
+    height: 15px;
+    margin-right: 5px;
+
   }

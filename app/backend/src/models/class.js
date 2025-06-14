@@ -20,6 +20,14 @@ module.exports = (sequelize, DataTypes) => {  const Class = sequelize.define('Cl
     corequisites: {
       type: DataTypes.TEXT,
       allowNull: true
+    },
+    status: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: 'planned',
+      validate: {
+        isIn: [['planned', 'in-progress', 'complete']]
+      }
     }
   }, {});
   Class.associate = function(models) {

@@ -9,6 +9,7 @@ router.get('/:semesterId/classes', authenticate, getClasses);
 
 // Routes for specific classes
 router.put('/:id', authenticate, updateClass);
+router.patch('/:id/status', authenticate, updateClass); // Add specific endpoint for status updates
 router.delete('/:id', authenticate, deleteClass);
 
 module.exports = router;

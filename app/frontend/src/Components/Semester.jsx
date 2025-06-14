@@ -4,7 +4,7 @@ import Class from './Class';
 import './styles/Semester.css';
 import './styles/Requirements.css';
 
-function Semester({ semester, removeSemester, updateSemester, addClass, deleteClass, deleteMode, requirements, editClass }) {  const [showModal, setShowModal] = useState(false);
+function Semester({ semester, removeSemester, updateSemester, addClass, deleteClass, updateClassStatus, deleteMode, requirements, editClass }) {  const [showModal, setShowModal] = useState(false);
   const [className, setClassName] = useState('');
   const [selectedRequirementTags, setSelectedRequirementTags] = useState([]);
   const [creditHours, setCreditHours] = useState('');
@@ -188,10 +188,12 @@ function Semester({ semester, removeSemester, updateSemester, addClass, deleteCl
             requirements={validTags.length > 0 ? validTags.join(', ') : ''}
             creditHours={classItem.creditHours}
             requirementTags={validTags}
+            status={classItem.status || 'planned'} // Include status with default value
             deleteMode={deleteMode}
             onClick={() => deleteMode && deleteClass(semester.id, classIndex)}
             onEdit={() => handleEditClass(classIndex, classItem)}
             onDelete={() => deleteClass(semester.id, classIndex)}
+            onStatusChange={(newStatus) => updateClassStatus(semester.id, classIndex, newStatus)}
           />
         );
       })}

@@ -288,13 +288,13 @@ function Map({ numSemesters, setNumSemesters, setTotalCredits, requirements, set
     } catch (error) {
       console.error('Error editing class:', error);
       // Fallback to local state if API fails
-      const updatedSemesters = localSemesters.map((semester) => {
-        if (semester.id === semesterId) {
-          const updatedClasses = [...semester.classes];
+      const updatedSemesters = localSemesters.map((sem) => {
+        if (sem.id === semesterId) {
+          const updatedClasses = [...sem.classes];
           updatedClasses[classIndex] = updatedClass;
-          return { ...semester, classes: updatedClasses };
+          return { ...sem, classes: updatedClasses };
         }
-        return semester;
+        return sem;
       });
       setLocalSemesters(updatedSemesters);
       
@@ -415,6 +415,74 @@ function Map({ numSemesters, setNumSemesters, setTotalCredits, requirements, set
     }
   };
   
+  const updateClassStatus = async (semesterId, classIndex, newStatus) => {
+    try {
+      // Find the semester and class
+      const semester = localSemesters.find(sem => sem.id === semesterId);
+      if (!semester || !semester.classes[classIndex]) {
+        console.error('Class not found for status update');
+        return;
+      }
+
+      const currentClass = semester.classes[classIndex];
+      
+      // Try to update in backend if class has a valid database ID
+      if (currentClass.id && typeof currentClass.id === 'number' && token) {
+        try {
+          const response = await apiUpdateClass(currentClass.id, { status: newStatus }, token);
+          const savedClass = response.data;
+          
+          // Update local state with the saved class data
+          const updatedSemesters = localSemesters.map((sem) => {
+            if (sem.id === semesterId) {
+              const updatedClasses = [...sem.classes];
+              updatedClasses[classIndex] = savedClass;
+              return { ...sem, classes: updatedClasses };
+            }
+            return sem;
+          });
+          setLocalSemesters(updatedSemesters);
+          
+          // Refresh requirements to update progress
+          if (onRequirementsUpdate) {
+            onRequirementsUpdate();
+          }
+        } catch (error) {
+          console.error('API error updating class status:', error);
+          // Fall through to local handling
+        }
+      } else {
+        // Fallback to local state for classes not yet in database
+        const updatedSemesters = localSemesters.map((sem) => {
+          if (sem.id === semesterId) {
+            const updatedClasses = [...sem.classes];
+            updatedClasses[classIndex] = { ...currentClass, status: newStatus };
+            return { ...sem, classes: updatedClasses };
+          }
+          return sem;
+        });
+        setLocalSemesters(updatedSemesters);
+        
+        // Refresh requirements to update progress after fallback
+        if (onRequirementsUpdate) {
+          onRequirementsUpdate();
+        }
+      }
+    } catch (error) {
+      console.error('Error updating class status:', error);
+      // Still update local state even if everything fails
+      const updatedSemesters = localSemesters.map((semester) => {
+        if (semester.id === semesterId) {
+          const updatedClasses = [...semester.classes];
+          updatedClasses[classIndex] = { ...updatedClasses[classIndex], status: newStatus };
+          return { ...semester, classes: updatedClasses };
+        }
+        return semester;
+      });
+      setLocalSemesters(updatedSemesters);
+    }
+  };
+  
   return (
     <div>
       <div className="map-container">
@@ -427,6 +495,7 @@ function Map({ numSemesters, setNumSemesters, setTotalCredits, requirements, set
             addClass={addClass}
             deleteClass={deleteClass}
             editClass={editClass}
+            updateClassStatus={updateClassStatus}
             requirements={requirements}
           />
         ))}
