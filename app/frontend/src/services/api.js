@@ -99,6 +99,14 @@ const deleteClass = async (classId, token) => {
   });
 };
 
+const updateClassStatus = async (classId, status, token) => {
+  return axios.patch(`${API_URL}/classes/${classId}/status`, { status }, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
 const createRequirement = async (mapId, requirementData, token) => {
   return axios.post(`${API_URL}/maps/${mapId}/requirements`, requirementData, {
     headers: {
@@ -150,6 +158,7 @@ export {
   addSemester, 
   addClass, 
   updateClass,
+  updateClassStatus,
   deleteSemester, 
   deleteClass,
   createRequirement,

@@ -18,7 +18,8 @@ exports.createClass = async (req, res) => {
       creditHours: req.body.creditHours || req.body.credits || 3, 
       requirementTags: req.body.requirementTags || [],
       prerequisites: req.body.prerequisites, 
-      corequisites: req.body.corequisites, 
+      corequisites: req.body.corequisites,
+      status: req.body.status || 'planned', // Default to 'planned' if not specified
       semesterId: semesterId
     });
     
@@ -55,6 +56,16 @@ exports.updateClass = async (req, res) => {
     classItem.requirementTags = req.body.requirementTags || classItem.requirementTags;
     classItem.prerequisites = req.body.prerequisites || classItem.prerequisites;
     classItem.corequisites = req.body.corequisites || classItem.corequisites;
+    
+    // Update status if provided
+    if (req.body.status) {
+      // Validate that status is one of the allowed values
+      if (['planned', 'in-progress', 'complete'].includes(req.body.status)) {
+        classItem.status = req.body.status;
+      } else {
+        return res.status(400).json({ error: 'Invalid status value. Must be one of: planned, in-progress, complete' });
+      }
+    }
     
     await classItem.save();
     
