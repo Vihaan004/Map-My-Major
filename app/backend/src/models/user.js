@@ -14,6 +14,15 @@ module.exports = (sequelize, DataTypes) => {
     password: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    googleId: {
+      type: DataTypes.STRING,
+      unique: true,
+      allowNull: true
+    },
+    profilePicture: {
+      type: DataTypes.STRING,
+      allowNull: true
     }
   }, {});
   User.associate = function(models) {

@@ -1,6 +1,8 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const session = require('express-session');
+const passport = require('./config/passport');
 
 const userRoutes = require('./routes/userRoutes');
 const mapRoutes = require('./routes/mapRoutes');
@@ -12,17 +14,35 @@ const app = express();
 
 // Set up CORS with specific configuration
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:3001'],
+  origin: process.env.NODE_ENV === 'production' 
+    ? [process.env.FRONTEND_URL]
+    : ['http://localhost:3000', 'http://localhost:3001'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
 }));
 app.use(express.json());
+
+// Set up session
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'session-secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 24 * 60 * 60 * 1000 // 1 day
+  }
+}));
+
+// Initialize passport
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Verify JWT_SECRET is loaded
 // console.log('JWT_SECRET:', process.env.JWT_SECRET);
 
 // Define routes
-app.use('/api/users', userRoutes);
+app.use('/api/users', userRoutes); // Changed back to '/api/users' to be consistent
 app.use('/api/maps', mapRoutes);
 app.use('/api/semesters', semesterRoutes);
 app.use('/api/classes', classRoutes);

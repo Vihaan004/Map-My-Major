@@ -1,32 +1,34 @@
-// const jwt = require('jsonwebtoken');
+const passport = require('passport');
 
-// exports.authenticate = (req, res, next) => {
-//   const token = req.header('Authorization');
-//   if (!token) {
-//     return res.status(401).json({ error: 'Access denied, no token provided' });
-//   }
-//   try {
-//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-//     req.userId = decoded.userId;
-//     next();
-//   } catch (error) {
-//     res.status(400).json({ error: 'Invalid token' });
-//   }
-// };
-
-
-const jwt = require('jsonwebtoken');
-
+// JWT authentication middleware
 exports.authenticate = (req, res, next) => {
-  const token = req.header('Authorization').replace('Bearer ', '');
-  if (!token) {
-    return res.status(401).json({ error: 'Access denied, no token provided' });
-  }
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.userId = decoded.userId;
+  passport.authenticate('jwt', { session: false }, (err, user, info) => {
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+    req.userId = user.id;
     next();
-  } catch (error) {
-    res.status(401).json({ error: 'Unauthorized' });
-  }
+  })(req, res, next);
+};
+
+// Google authentication middleware
+exports.authenticateGoogle = passport.authenticate('google', {
+  scope: ['profile', 'email']
+});
+
+// Google authentication callback middleware
+exports.googleCallback = (req, res, next) => {
+  passport.authenticate('google', { session: false }, (err, user, info) => {
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      return res.status(401).json({ error: 'Authentication failed' });
+    }
+    req.userId = user.id;
+    next();
+  })(req, res, next);
 };
