@@ -1,4 +1,7 @@
 # Backend Nixpacks configuration
+[variables]
+NODE_VERSION = "18"
+
 [phases.build]
 cmds = ["npm ci"]
 
