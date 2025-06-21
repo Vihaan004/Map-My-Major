@@ -5,6 +5,13 @@ const { Strategy: LocalStrategy } = require('passport-local');
 const { User } = require('../models');
 const bcrypt = require('bcryptjs');
 
+// Check if required environment variables are present
+if (!process.env.JWT_SECRET) {
+  console.error('ERROR: JWT_SECRET environment variable is not set!');
+  console.log('Available environment variables:', Object.keys(process.env).filter(key => key.includes('JWT')));
+  throw new Error('JWT_SECRET is required but not found in environment variables');
+}
+
 // Local Strategy for username/password login
 passport.use(new LocalStrategy(
   {
