@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.addColumn('Classes', 'status', {
+    await queryInterface.addColumn('classes', 'status', {
       type: Sequelize.STRING,
       allowNull: false,
       defaultValue: 'planned'
@@ -9,6 +9,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.removeColumn('Classes', 'status');
+    await queryInterface.removeColumn('classes', 'status');
   }
 };
