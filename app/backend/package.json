@@ -4,12 +4,11 @@
   "main": "src/index.js",  "engines": {
     "node": ">=18.0.0",
     "npm": ">=9.0.0"
-  },"scripts": {
+  },  "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/index.js",
     "start:migrate": "npx sequelize-cli db:migrate && node src/index.js",
-    "build": "echo 'No build step required for Node.js backend'",
-    "postinstall": "npx sequelize-cli db:migrate"
+    "build": "echo 'No build step required for Node.js backend'"
   },
   "keywords": [],
   "author": "",
