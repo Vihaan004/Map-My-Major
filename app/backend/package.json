@@ -5,12 +5,12 @@
   "engines": {
     "node": "18.x",
     "npm": "9.x"
-  },
-  "scripts": {
+  },  "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/index.js",
     "start:migrate": "npx sequelize-cli db:migrate && node src/index.js",
-    "build": "echo 'No build step required for Node.js backend'"
+    "build": "echo 'No build step required for Node.js backend'",
+    "postinstall": "npx sequelize-cli db:migrate"
   },
   "keywords": [],
   "author": "",

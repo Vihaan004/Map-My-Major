@@ -12,8 +12,7 @@
     "database": "database_test",
     "host": "127.0.0.1",
     "dialect": "postgres"
-  },
-  "production": {
+  },  "production": {
     "use_env_variable": "DATABASE_URL",
     "dialect": "postgres",
     "dialectOptions": {
@@ -21,6 +20,7 @@
         "require": true,
         "rejectUnauthorized": false
       }
-    }
+    },
+    "logging": false
   }
 }
