@@ -1,28 +1,24 @@
 {
   "version": 2,
   "name": "map-my-major",
-  "builds": [
-    {
-      "src": "app/frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    }
-  ],
+  "buildCommand": "cd app/frontend && npm run build",
+  "outputDirectory": "app/frontend/dist",
   "functions": {
-    "app/backend/src/index.js": {
+    "app/backend/api/*.js": {
       "runtime": "nodejs18.x"
     }
   },
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "/app/backend/src/index.js"
+      "dest": "/app/backend/api/$1.js"
+    },
+    {
+      "handle": "filesystem"
     },
     {
       "src": "/(.*)",
-      "dest": "/app/frontend/dist/$1"
+      "dest": "/index.html"
     }
   ],
   "env": {
