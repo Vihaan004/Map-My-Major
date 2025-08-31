@@ -16,3 +16,30 @@ The tracker section should contain a list of all requirement categoies that are 
 
 ## Framework
 
+### Tech Stack
+
+**Frontend:**
+- **Next.js 14** (App Router) - React framework optimized for Vercel deployment
+- **TypeScript** - Type safety for complex course and requirement data structures
+- **Tailwind CSS** - Utility-first CSS for rapid UI development
+- **shadcn/ui** - Accessible, customizable component library built on Radix UI
+- **TanStack Query** - Powerful data fetching and caching for course/program data
+- **@dnd-kit** - Modern drag-and-drop library for course management between semesters
+- **Zustand** - Lightweight state management for map and semester data
+
+**Backend & Database:**
+- **Supabase** - PostgreSQL database with real-time capabilities
+- **Supabase Auth** - Authentication with Google OAuth support
+- **Supabase Edge Functions** - Serverless functions for complex business logic
+
+**Additional Tools:**
+- **Zod** - Schema validation for forms and API data
+- **React Hook Form** - Performant form handling with validation
+- **Lucide React** - Beautiful, customizable icons
+
+**Deployment:**
+- **Vercel** - Frontend deployment with automatic GitHub integration
+- **Supabase** - Backend and database hosting (free tier)
+
+This stack provides excellent developer experience, type safety, and leverages free hosting tiers for MVP development while maintaining scalability for future growth.
+
