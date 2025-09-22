@@ -14,6 +14,38 @@ As for the UI of the map page, there should be two sections, one section contain
 
 The tracker section should contain a list of all requirement categoies that are being tracked from the classes added in the map. Examples of requirement categories: Humanites, arts and design (HUAD), Social and Behavioral studies (SOBE), Scientific Thinking in Natural Sciences (SCIT), Quantitative reasoning (QTRS), etc. Each class in the database will have a property called requirements that will contain all the tags of the requirements that it satisfies. The trackers should access the classes added to the map to tally the how many credits or classes each requirement has accumulated. (A requirment either needs a specific amount of credits with that tag or a number of classes with that tag). 
 
+## Database structure 
+Note: For phase 1 we will have less data in the database but our goal is to establish the schema. 
+We will start with only a BS in computer science in programs and the courses required for that program.  
+
+### Program Database:
+Each data element has the following properties:
+1. PROGRAM
+2. DEGREE
+3. LOCATION
+4. CATALOG_YEAR
+5. COLLEGE
+6. TOTAL_CREDITS_REQUIRED
+7. UD_CREDITS_REQUIRED
+8. MINIMUM_GPA
+9. REQUIRED_COURSES
+10. ELECTIVES
+
+Example
+
+### Cousre Database:
+Each data element has the following properties:
+1. SUBJECT
+2. CODE
+3. NAME
+4. CREDITS
+5. GENERAL_STUDIES_TAG
+6. PRE-REQUISITE_COURSES
+7. CO-REQUISITE_COURSES
+8. OFFERING_COLLEGES
+9. YEAR_REQUIREMENT
+
+
 ## Framework
 
 ### Tech Stack
@@ -41,5 +73,4 @@ The tracker section should contain a list of all requirement categoies that are 
 - **Vercel** - Frontend deployment with automatic GitHub integration
 - **Supabase** - Backend and database hosting (free tier)
 
-This stack provides excellent developer experience, type safety, and leverages free hosting tiers for MVP development while maintaining scalability for future growth.
 
