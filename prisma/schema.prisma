@@ -1,0 +1,202 @@
+// MapMyMajor Prisma Schema
+// Based on ARCHITECTURE.md - MVP version (excluding future features like Program)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ============================================
+// USER & AUTHENTICATION
+// ============================================
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  accounts Account[]
+  sessions Session[]
+  maps     Map[]
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ============================================
+// CORE APPLICATION MODELS
+// ============================================
+
+enum MapStatus {
+  ACTIVE
+  ARCHIVED
+  COMPLETED
+}
+
+enum Term {
+  FALL
+  SPRING
+  SUMMER
+}
+
+enum ClassStatus {
+  PLANNED
+  IN_PROGRESS
+  COMPLETED
+  DROPPED
+}
+
+enum RequirementType {
+  CREDIT_HOURS
+  CLASS_COUNT
+}
+
+model Map {
+  id                 String     @id @default(cuid())
+  userId             String     @map("user_id")
+  mapName            String     @map("map_name")
+  mapUniversity      String?    @map("map_university")
+  mapDegree          String?    @map("map_degree")
+  mapRequirements    Json?      @map("map_requirements") @db.JsonB // Array of requirement objects
+  trackTotalCredits  Decimal    @default(0) @map("track_total_credits") @db.Decimal(5, 2)
+  startTerm          Term       @map("start_term")
+  startYear          Int        @map("start_year")
+  status             MapStatus  @default(ACTIVE)
+  createdAt          DateTime   @default(now()) @map("created_at")
+  updatedAt          DateTime   @updatedAt @map("updated_at")
+
+  // Relations
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  semesters Semester[]
+  classes   Class[]
+
+  @@index([userId])
+  @@map("maps")
+}
+
+model Semester {
+  id    String @id @default(cuid())
+  mapId String @map("map_id")
+  term  Term
+  year  Int
+  index Int    // Order within the map (0, 1, 2...)
+
+  // Relations
+  map     Map     @relation(fields: [mapId], references: [id], onDelete: Cascade)
+  classes Class[]
+
+  @@index([mapId])
+  @@map("semesters")
+}
+
+model Course {
+  id              String   @id @default(cuid())
+  courseCode      String   @unique @map("course_code") // e.g., "CSE110"
+  subject         String // e.g., "CSE"
+  number          String // e.g., "110"
+  name            String // e.g., "Principles of Programming"
+  description     String?  @db.Text
+  creditHours     Decimal  @map("credit_hours") @db.Decimal(4, 2)
+  prerequisites   Json?    @db.JsonB // Array of course codes
+  corequisites    Json?    @db.JsonB // Array of course codes
+  requirementTags Json?    @map("requirement_tags") @db.JsonB // Array of strings
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  classes Class[]
+
+  @@map("courses")
+}
+
+model Class {
+  id                   String      @id @default(cuid())
+  mapId                String      @map("map_id")
+  semesterId           String      @map("semester_id")
+  index                Int // Order within semester
+  courseId             String?     @map("course_id") // Nullable for custom classes
+  classCode            String      @map("class_code")
+  classSubject         String      @map("class_subject")
+  classNumber          String      @map("class_number")
+  className            String      @map("class_name")
+  classCredits         Decimal     @map("class_credits") @db.Decimal(4, 2)
+  classPrerequisites   Json?       @map("class_prerequisites") @db.JsonB
+  classCorequisites    Json?       @map("class_corequisites") @db.JsonB
+  classRequirementTags Json?       @map("class_requirement_tags") @db.JsonB
+  status               ClassStatus @default(PLANNED)
+  grade                String?
+  createdAt            DateTime    @default(now()) @map("created_at")
+  updatedAt            DateTime    @updatedAt @map("updated_at")
+
+  // Relations
+  map      Map      @relation(fields: [mapId], references: [id], onDelete: Cascade)
+  semester Semester @relation(fields: [semesterId], references: [id], onDelete: Cascade)
+  course   Course?  @relation(fields: [courseId], references: [id], onDelete: SetNull)
+
+  @@index([mapId])
+  @@index([semesterId])
+  @@index([courseId])
+  @@map("classes")
+}
+
+model Requirement {
+  id          String          @id @default(cuid())
+  name        String
+  tag         String          @unique // e.g., "HUAD", "CS-CORE"
+  category    String? // e.g., "General Studies", "Major Core"
+  type        RequirementType
+  description String?         @db.Text
+  isCustom    Boolean         @default(false) @map("is_custom")
+  createdAt   DateTime        @default(now()) @map("created_at")
+  updatedAt   DateTime        @updatedAt @map("updated_at")
+
+  @@map("requirements")
+}
