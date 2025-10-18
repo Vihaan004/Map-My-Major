@@ -61,10 +61,16 @@ export default async function DashboardPage() {
             </div>
           </div>
 
-          <div className="mt-8">
+          <div className="mt-8 flex gap-4">
             <button className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
               Create New Map
             </button>
+            <a 
+              href="/test-api" 
+              className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors inline-block"
+            >
+              API Testing Dashboard
+            </a>
           </div>
         </div>
       </main>
