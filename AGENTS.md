@@ -1,4 +1,4 @@
-## Memory Management for Project Development with AI Agents
+# Instructions for developing MapMyMajor
 
 ### Key information files for this project:
 Read the following files to get accurate context and instructions for any task you are performing for MapMyMajor. 
@@ -15,3 +15,21 @@ The purpose of the memory file is to keep track of important decisions, changes,
 - Critical decisions that need to be preserved across development sessions
 - Breaking changes or important architectural modifications
 - Keep logs minimal and concise to reduce clutter (use bullet points)
+
+### Development Principles:
+Guiding principles:
+- Think deeply for complex tasks, then implement minimally. No speculative abstractions.
+- Ship in small, validated steps; harden functionality before starting the next phase.
+- Use Playwright MCP to accelerate UI layout/design feedback and enforce UI quality.
+- Ask for more context if anything is unclear or you need additional information for a task
+
+
+### Collaboration and Workflow
+- Work in small, independently shippable slices with clear acceptance criteria.
+- Follow this implementation plan before coding:
+  - Problem statement
+  - User story and acceptance criteria
+  - Data model changes (if any)
+  - API changes (if any)
+  - UI changes (screens, components)
+
