@@ -26,6 +26,12 @@ Map My Major empowers students to create detailed academic plans by mapping out 
   - (potential) Fetch and import verified university courses to add to course bank
   - Search, filter, and sort courses in the bank 
   - Can be accessed from any map to add courses in the map
-
+- University Integrations (potential future-future feature):
+  - Syncing with university systems for real-time updates on program requirements and course offerings
+  - Advisor accounts for monitoring and assisting students' maps
+  - Fetching classes for each course for registration
+  - Exporting semester classes to university registration systems
+  - In-house degree audits based on university auditing systems
+  - Collaboration features for students and advisors
 
 

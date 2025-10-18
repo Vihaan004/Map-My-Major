@@ -1,17 +1,16 @@
 # Project Memory - MapMyMajor
-**Last Updated:** August 31, 2025
+**Last Updated:** October 18, 2025
 
 ## Project Essentials
 
 **Core Idea:** A Web App to plan, visualize, and track academic programs by creating interactive and customizable 'maps' coupled with advising support and college data integrations. Designed to assist students in organizing their academic journey effectively. 
 
 **Tech Stack:**
-- Frontend: Next.js + TypeScript + Tailwind CSS 
-- Backend: Node.js
-- Database: Supabase (PostgreSQL + Google OAuth)
+- Frontend: Next.js + React + TypeScript + Tailwind CSS
+- Backend and APIs: Next.js Server Actions + route handlers + Supabase Postgres  
 - Deployment: Vercel + Supabase
 
-**Key Files:**
+**Key Information Files:**
 - `AGENTS.md` - Development guidelines for agents
 - `README.md` - Primary project description, features, and deliverables
 - `WORKFLOW.md` - Application workflow and data structure
