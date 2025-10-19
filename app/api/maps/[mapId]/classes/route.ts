@@ -25,7 +25,7 @@ const createClassSchema = z.object({
 // POST /api/maps/[mapId]/classes - Create a new class in a map
 export async function POST(
   request: NextRequest,
-  { params }: { params: { mapId: string } }
+  { params }: { params: Promise<{ mapId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -33,11 +33,13 @@ export async function POST(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const { mapId } = await params;
+
     // Verify map exists and user owns it
     const { data: map, error: mapError } = await supabaseAdmin
       .from('maps')
       .select('*')
-      .eq('id', params.mapId)
+      .eq('id', mapId)
       .eq('user_id', session.user.id)
       .single();
 
@@ -79,7 +81,7 @@ export async function POST(
       .from('semesters')
       .select('*')
       .eq('id', semester_id)
-      .eq('map_id', params.mapId)
+      .eq('map_id', mapId)
       .single();
 
     if (semesterError || !semester) {
@@ -108,7 +110,7 @@ export async function POST(
     // Create the class
     const newClass = {
       id: nanoid(),
-      map_id: params.mapId,
+      map_id: mapId,
       semester_id,
       course_id: course_id || null,
       class_code,
@@ -153,7 +155,7 @@ export async function POST(
 // GET /api/maps/[mapId]/classes - List all classes in a map
 export async function GET(
   request: NextRequest,
-  { params }: { params: { mapId: string } }
+  { params }: { params: Promise<{ mapId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -161,11 +163,13 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const { mapId } = await params;
+
     // Verify map exists and user owns it
     const { data: map, error: mapError } = await supabaseAdmin
       .from('maps')
       .select('*')
-      .eq('id', params.mapId)
+      .eq('id', mapId)
       .eq('user_id', session.user.id)
       .single();
 
@@ -183,7 +187,7 @@ export async function GET(
     let query = supabaseAdmin
       .from('classes')
       .select('*')
-      .eq('map_id', params.mapId);
+      .eq('map_id', mapId);
 
     if (semesterId) {
       query = query.eq('semester_id', semesterId);

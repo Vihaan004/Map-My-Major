@@ -20,7 +20,7 @@ const updateCourseSchema = z.object({
 // GET /api/courses/[id] - Get a single course
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -28,10 +28,12 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const { id } = await params;
+
     const { data: course, error } = await supabaseAdmin
       .from('courses')
       .select('*')
-      .eq('id', params.id)
+      .eq('id', id)
       .single();
 
     if (error || !course) {
@@ -51,7 +53,7 @@ export async function GET(
 // PUT /api/courses/[id] - Update a course
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -59,6 +61,7 @@ export async function PUT(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const { id } = await params;
     const body = await request.json();
     const validation = updateCourseSchema.safeParse(body);
 
@@ -73,7 +76,7 @@ export async function PUT(
     const { data: existingCourse, error: fetchError } = await supabaseAdmin
       .from('courses')
       .select('*')
-      .eq('id', params.id)
+      .eq('id', id)
       .single();
 
     if (fetchError || !existingCourse) {
@@ -105,7 +108,7 @@ export async function PUT(
     const { data: course, error } = await supabaseAdmin
       .from('courses')
       .update(updateData)
-      .eq('id', params.id)
+      .eq('id', id)
       .select()
       .single();
 
@@ -130,7 +133,7 @@ export async function PUT(
 // DELETE /api/courses/[id] - Delete a course
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -138,11 +141,13 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const { id } = await params;
+
     // Check if course exists
     const { data: existingCourse, error: fetchError } = await supabaseAdmin
       .from('courses')
       .select('*')
-      .eq('id', params.id)
+      .eq('id', id)
       .single();
 
     if (fetchError || !existingCourse) {
@@ -153,7 +158,7 @@ export async function DELETE(
     const { data: classes, error: classCheckError } = await supabaseAdmin
       .from('classes')
       .select('id')
-      .eq('course_id', params.id)
+      .eq('course_id', id)
       .limit(1);
 
     if (classCheckError) {
@@ -175,7 +180,7 @@ export async function DELETE(
     const { error } = await supabaseAdmin
       .from('courses')
       .delete()
-      .eq('id', params.id);
+      .eq('id', id);
 
     if (error) {
       console.error('Error deleting course:', error);

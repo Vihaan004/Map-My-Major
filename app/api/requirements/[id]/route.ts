@@ -17,7 +17,7 @@ const updateRequirementSchema = z.object({
 // GET /api/requirements/[id] - Get a single requirement
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -25,10 +25,12 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const { id } = await params;
+
     const { data: requirement, error } = await supabaseAdmin
       .from('requirements')
       .select('*')
-      .eq('id', params.id)
+      .eq('id', id)
       .single();
 
     if (error || !requirement) {
@@ -48,13 +50,15 @@ export async function GET(
 // PUT /api/requirements/[id] - Update a requirement
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const { id } = await params;
 
     const body = await request.json();
     const validation = updateRequirementSchema.safeParse(body);
@@ -70,7 +74,7 @@ export async function PUT(
     const { data: existingRequirement, error: fetchError } = await supabaseAdmin
       .from('requirements')
       .select('*')
-      .eq('id', params.id)
+      .eq('id', id)
       .single();
 
     if (fetchError || !existingRequirement) {
@@ -102,7 +106,7 @@ export async function PUT(
     const { data: requirement, error } = await supabaseAdmin
       .from('requirements')
       .update(updateData)
-      .eq('id', params.id)
+      .eq('id', id)
       .select()
       .single();
 
@@ -127,7 +131,7 @@ export async function PUT(
 // DELETE /api/requirements/[id] - Delete a requirement
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -135,11 +139,13 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const { id } = await params;
+
     // Check if requirement exists
     const { data: existingRequirement, error: fetchError } = await supabaseAdmin
       .from('requirements')
       .select('*')
-      .eq('id', params.id)
+      .eq('id', id)
       .single();
 
     if (fetchError || !existingRequirement) {
@@ -158,7 +164,7 @@ export async function DELETE(
     const { error } = await supabaseAdmin
       .from('requirements')
       .delete()
-      .eq('id', params.id);
+      .eq('id', id);
 
     if (error) {
       console.error('Error deleting requirement:', error);

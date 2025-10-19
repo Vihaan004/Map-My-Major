@@ -49,7 +49,7 @@ async function verifyClassOwnership(classId: string, userId: string) {
 // GET /api/classes/[id] - Get a single class
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -57,7 +57,9 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { owned, class: classData } = await verifyClassOwnership(params.id, session.user.id);
+    const { id } = await params;
+
+    const { owned, class: classData } = await verifyClassOwnership(id, session.user.id);
 
     if (!owned || !classData) {
       return NextResponse.json(
@@ -79,7 +81,7 @@ export async function GET(
 // PUT /api/classes/[id] - Update a class
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -87,8 +89,10 @@ export async function PUT(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const { id } = await params;
+
     const { owned, class: existingClass } = await verifyClassOwnership(
-      params.id,
+      id,
       session.user.id
     );
 
@@ -151,7 +155,7 @@ export async function PUT(
     const { data: classData, error } = await supabaseAdmin
       .from('classes')
       .update(updateData)
-      .eq('id', params.id)
+      .eq('id', id)
       .select()
       .single();
 
@@ -176,7 +180,7 @@ export async function PUT(
 // DELETE /api/classes/[id] - Delete a class
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -184,7 +188,9 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { owned, class: classData } = await verifyClassOwnership(params.id, session.user.id);
+    const { id } = await params;
+
+    const { owned, class: classData } = await verifyClassOwnership(id, session.user.id);
 
     if (!owned || !classData) {
       return NextResponse.json(
@@ -197,7 +203,7 @@ export async function DELETE(
     const { error } = await supabaseAdmin
       .from('classes')
       .delete()
-      .eq('id', params.id);
+      .eq('id', id);
 
     if (error) {
       console.error('Error deleting class:', error);
@@ -220,7 +226,7 @@ export async function DELETE(
 // PATCH /api/classes/[id] - Move class to a different semester
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -228,8 +234,10 @@ export async function PATCH(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const { id } = await params;
+
     const { owned, class: existingClass } = await verifyClassOwnership(
-      params.id,
+      id,
       session.user.id
     );
 
@@ -280,7 +288,7 @@ export async function PATCH(
     const { data: classData, error } = await supabaseAdmin
       .from('classes')
       .update(moveData)
-      .eq('id', params.id)
+      .eq('id', id)
       .select()
       .single();
 

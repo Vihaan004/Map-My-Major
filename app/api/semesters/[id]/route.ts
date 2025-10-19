@@ -33,7 +33,7 @@ async function verifySemesterOwnership(semesterId: string, userId: string) {
 // GET /api/semesters/[id] - Get a single semester
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -41,7 +41,9 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { owned, semester } = await verifySemesterOwnership(params.id, session.user.id);
+    const { id } = await params;
+
+    const { owned, semester } = await verifySemesterOwnership(id, session.user.id);
 
     if (!owned || !semester) {
       return NextResponse.json(
@@ -63,7 +65,7 @@ export async function GET(
 // PUT /api/semesters/[id] - Update a semester
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -71,8 +73,10 @@ export async function PUT(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const { id } = await params;
+
     const { owned, semester: existingSemester } = await verifySemesterOwnership(
-      params.id,
+      id,
       session.user.id
     );
 
@@ -104,7 +108,7 @@ export async function PUT(
         .eq('map_id', existingSemester.map_id)
         .eq('term', newTerm)
         .eq('year', newYear)
-        .neq('id', params.id)
+        .neq('id', id)
         .single();
 
       if (conflictingSemester) {
@@ -119,7 +123,7 @@ export async function PUT(
     const { data: semester, error } = await supabaseAdmin
       .from('semesters')
       .update(validation.data)
-      .eq('id', params.id)
+      .eq('id', id)
       .select()
       .single();
 
@@ -144,7 +148,7 @@ export async function PUT(
 // DELETE /api/semesters/[id] - Delete a semester
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -152,7 +156,9 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { owned, semester } = await verifySemesterOwnership(params.id, session.user.id);
+    const { id } = await params;
+
+    const { owned, semester } = await verifySemesterOwnership(id, session.user.id);
 
     if (!owned || !semester) {
       return NextResponse.json(
@@ -165,7 +171,7 @@ export async function DELETE(
     const { data: classes, error: classCheckError } = await supabaseAdmin
       .from('classes')
       .select('id')
-      .eq('semester_id', params.id)
+      .eq('semester_id', id)
       .limit(1);
 
     if (classCheckError) {
@@ -187,7 +193,7 @@ export async function DELETE(
     const { error } = await supabaseAdmin
       .from('semesters')
       .delete()
-      .eq('id', params.id);
+      .eq('id', id);
 
     if (error) {
       console.error('Error deleting semester:', error);

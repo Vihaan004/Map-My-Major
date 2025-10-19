@@ -33,7 +33,12 @@ export default async function DashboardPage() {
   return (
     <DashboardClient 
       user={user} 
-      maps={maps || []} 
+      maps={(maps || []).map(m => ({
+        ...m,
+        track_total_credits: m.track_total_credits ?? 0,
+        status: m.status ?? 'ACTIVE',
+        created_at: m.created_at ?? new Date().toISOString(),
+      }))} 
       courseCount={courseCount || 0}
       totalCredits={totalCredits}
     />

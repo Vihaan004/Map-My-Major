@@ -15,7 +15,7 @@ const createSemesterSchema = z.object({
 // POST /api/maps/[mapId]/semesters - Create a new semester in a map
 export async function POST(
   request: NextRequest,
-  { params }: { params: { mapId: string } }
+  { params }: { params: Promise<{ mapId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -23,11 +23,13 @@ export async function POST(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const { mapId } = await params;
+
     // Verify map exists and user owns it
     const { data: map, error: mapError } = await supabaseAdmin
       .from('maps')
       .select('*')
-      .eq('id', params.mapId)
+      .eq('id', mapId)
       .eq('user_id', session.user.id)
       .single();
 
@@ -54,7 +56,7 @@ export async function POST(
     const { data: existingSemester } = await supabaseAdmin
       .from('semesters')
       .select('id')
-      .eq('map_id', params.mapId)
+      .eq('map_id', mapId)
       .eq('term', term)
       .eq('year', year)
       .single();
@@ -69,7 +71,7 @@ export async function POST(
     // Create the semester
     const newSemester = {
       id: nanoid(),
-      map_id: params.mapId,
+      map_id: mapId,
       term,
       year,
       index,
@@ -102,7 +104,7 @@ export async function POST(
 // GET /api/maps/[mapId]/semesters - List all semesters in a map
 export async function GET(
   request: NextRequest,
-  { params }: { params: { mapId: string } }
+  { params }: { params: Promise<{ mapId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -110,11 +112,13 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const { mapId } = await params;
+
     // Verify map exists and user owns it
     const { data: map, error: mapError } = await supabaseAdmin
       .from('maps')
       .select('*')
-      .eq('id', params.mapId)
+      .eq('id', mapId)
       .eq('user_id', session.user.id)
       .single();
 
@@ -129,7 +133,7 @@ export async function GET(
     const { data: semesters, error } = await supabaseAdmin
       .from('semesters')
       .select('*')
-      .eq('map_id', params.mapId)
+      .eq('map_id', mapId)
       .order('index', { ascending: true });
 
     if (error) {

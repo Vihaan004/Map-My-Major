@@ -21,7 +21,7 @@ const updateMapSchema = z.object({
  */
 export async function GET(
   req: NextRequest,
-  { params }: { params: { mapId: string } }
+  { params }: { params: Promise<{ mapId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -30,10 +30,12 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const { mapId } = await params;
+
     const { data: map, error } = await supabaseAdmin
       .from('maps')
       .select('*')
-      .eq('id', params.mapId)
+      .eq('id', mapId)
       .eq('user_id', session.user.id)
       .single();
 
@@ -60,7 +62,7 @@ export async function GET(
  */
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { mapId: string } }
+  { params }: { params: Promise<{ mapId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -68,6 +70,8 @@ export async function PUT(
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const { mapId } = await params;
 
     const body = await req.json();
     
@@ -86,7 +90,7 @@ export async function PUT(
     const { data: existingMap } = await supabaseAdmin
       .from('maps')
       .select('id')
-      .eq('id', params.mapId)
+      .eq('id', mapId)
       .eq('user_id', session.user.id)
       .single();
 
@@ -105,7 +109,7 @@ export async function PUT(
         map_requirements: updateData.map_requirements as any,
         updated_at: new Date().toISOString(),
       })
-      .eq('id', params.mapId)
+      .eq('id', mapId)
       .select()
       .single();
 
@@ -133,7 +137,7 @@ export async function PUT(
  */
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { mapId: string } }
+  { params }: { params: Promise<{ mapId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -142,11 +146,13 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const { mapId } = await params;
+
     // Check if map exists and belongs to user
     const { data: existingMap } = await supabaseAdmin
       .from('maps')
       .select('id')
-      .eq('id', params.mapId)
+      .eq('id', mapId)
       .eq('user_id', session.user.id)
       .single();
 
@@ -161,7 +167,7 @@ export async function DELETE(
     const { error } = await supabaseAdmin
       .from('maps')
       .delete()
-      .eq('id', params.mapId);
+      .eq('id', mapId);
 
     if (error) {
       console.error('Error deleting map:', error);
